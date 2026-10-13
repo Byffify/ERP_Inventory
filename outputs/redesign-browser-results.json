@@ -1,0 +1,41 @@
+{
+  "results": [
+    {
+      "name": "one model groups variant quantities without duplicate product cards",
+      "status": "passed"
+    },
+    {
+      "name": "select variants in context then issue once from the order summary",
+      "status": "passed"
+    },
+    {
+      "name": "handwritten sale deducts without issuing a bill and undo restores stock",
+      "status": "passed"
+    },
+    {
+      "name": "physical count uses the actual counted total including zero and survives reload",
+      "status": "passed"
+    },
+    {
+      "name": "receiving adds quantities rather than replacing stock",
+      "status": "passed"
+    },
+    {
+      "name": "simple product creation needs no SKU generator or multi-step review",
+      "status": "passed"
+    },
+    {
+      "name": "selection rejects overselling without stock changes and keyboard exit restores focus",
+      "status": "passed"
+    },
+    {
+      "name": "order banner remains visible while browsing further products",
+      "status": "passed"
+    },
+    {
+      "name": "product-first interface and bill remain usable at required sizes",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

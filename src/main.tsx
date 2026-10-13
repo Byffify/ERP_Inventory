@@ -10,4 +10,6 @@ import './styles.css';
 import './catalog.css';
 import './simple-stock.css';
 import './inventory.css';
+import './critique.css';
+import './ebay.css';
 createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);

@@ -1,5 +1,6 @@
+import {seed} from './fixtures.mjs';
 import {it,expect} from 'vitest';
-import {seed,stock,saveDraft,confirmSale,reviseSale,cancelSale,receiveStock,loadState,STORAGE_KEY} from '../src/domain';
+import {stock,saveDraft,confirmSale,reviseSale,cancelSale,receiveStock,loadState,STORAGE_KEY} from '../src/domain';
 import {saveModel,addCategory,optionCombinations,resolvedImage} from '../src/catalog';
 const variant=(id='x',overrides={})=>({id,code:`SKU-${id.toUpperCase()}`,color:'ดำ',size:'M',unit:'แพ็ก',price:10000,openingQuantity:5,active:true,...overrides});
 const model=(overrides={})=>({id:'new-model',name:'รุ่นใหม่',description:'รายละเอียดจำลอง',categoryId:'uncategorized',variants:[variant()],...overrides});

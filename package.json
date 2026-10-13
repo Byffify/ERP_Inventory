@@ -10,7 +10,12 @@
     "test": "vitest run",
     "test:browser": "node tests/browser.mjs",
     "test:catalog": "node tests/catalog-browser.mjs",
-    "test:inventory": "node tests/inventory-browser.mjs"
+    "test:inventory": "node tests/redesign-browser.mjs",
+    "test:redesign": "node tests/redesign-browser.mjs",
+    "test:critique": "node tests/critique-browser.mjs",
+    "test:menus": "node tests/menu-separation-browser.mjs",
+    "test:simple": "node tests/simple-flow-browser.mjs",
+    "test:empty": "node tests/empty-startup-browser.mjs"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.0",

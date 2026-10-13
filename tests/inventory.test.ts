@@ -1,5 +1,6 @@
+import {seed} from './fixtures.mjs';
 import {it,expect} from 'vitest';
-import {seed,deductStock,receiveStock,undoDeduction} from '../src/domain';
+import {deductStock,receiveStock,undoDeduction} from '../src/domain';
 import {inventoryStatus,filterInventory} from '../src/inventory';
 const classified=()=>{const s=seed();s.categories.push({id:'bra',name:'เสื้อชั้นใน'},{id:'panty',name:'กางเกงชั้นใน'});s.models[0].categoryId='bra';s.models[1].categoryId='panty';s.models[2].categoryId='bra';return s;};
 it('product category and stock status filter independently',()=>{const s=classified();expect(filterInventory(s,{category:'bra'}).map(p=>p.id)).toEqual(['a','c']);expect(filterInventory(s,{availability:'empty'}).map(p=>p.id)).toEqual(['c']);expect(filterInventory(s,{category:'bra',availability:'available'}).map(p=>p.id)).toEqual(['a']);expect(filterInventory(s,{category:'panty',availability:'empty'})).toEqual([])});

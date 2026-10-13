@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-10-12T20:21:11.452Z",
+  "timestamp": "2026-10-13T07:24:46.734Z",
   "physicalDevice": false,
   "results": [
     {
@@ -47,15 +47,15 @@
       "status": "passed"
     },
     {
-      "name": "stock cards reduce without a bill, undo, then invoicing deducts exactly once",
+      "name": "handwritten sale reduces without an invoice and undo returns quantities",
       "status": "passed"
     },
     {
-      "name": "manual stock shortcut rejects a shortage without changing stock or creating bills",
+      "name": "handwritten sale rejects shortage without any partial stock or invoice",
       "status": "passed"
     },
     {
-      "name": "failed reduction and failed undo retain the prior undo action for retry",
+      "name": "failed handwritten undo preserves its operation for retry",
       "status": "passed"
     }
   ],

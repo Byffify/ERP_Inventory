@@ -1,0 +1,45 @@
+{
+  "results": [
+    {
+      "name": "Inventory manages product data and Stock management has only quantity controls",
+      "status": "passed"
+    },
+    {
+      "name": "editing product data does not change recorded stock",
+      "status": "passed"
+    },
+    {
+      "name": "Inventory creation starts at zero and all receiving stays in Stock management",
+      "status": "passed"
+    },
+    {
+      "name": "unused product deletion is confirmed and persists",
+      "status": "passed"
+    },
+    {
+      "name": "referenced products offer deactivation while retaining stock history",
+      "status": "passed"
+    },
+    {
+      "name": "stock receipt and stock-out alter quantities without creating invoices and appear in logs",
+      "status": "passed"
+    },
+    {
+      "name": "physical count is distinct from incoming and outgoing quantities",
+      "status": "passed"
+    },
+    {
+      "name": "sale menu still selects variants and issues exactly one bill",
+      "status": "passed"
+    },
+    {
+      "name": "desktop sidebar and mobile menu preserve independent pages without overflow",
+      "status": "passed"
+    },
+    {
+      "name": "mobile menu supports Escape and restores focus",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

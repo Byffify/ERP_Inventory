@@ -1,5 +1,6 @@
+import {seed} from './fixtures.mjs';
 import {it,expect} from 'vitest';
-import {seed,issueSale,stock} from '../src/domain';
+import {issueSale,stock} from '../src/domain';
 import {bahtWords} from '../src/bill-document';
 const details={sellerName:'ร้านตัวอย่าง',sellerAddress:'ที่อยู่จำลอง',sellerTaxId:'',buyerName:'ลูกค้าตัวอย่าง',buyerAddress:'',buyerTaxId:'',bookNumber:'1',receiverName:''};
 it('issues one confirmed bill without persisting an intermediate draft',()=>{const s=issueSale(seed(),'one',[{productId:'a',quantity:3,price:18000}],details);expect(s.sales).toHaveLength(1);expect(s.sales[0].status).toBe('confirmed');expect(stock(s,'a')).toBe(9);expect(s.sales[0].document.buyerName).toBe('ลูกค้าตัวอย่าง')});

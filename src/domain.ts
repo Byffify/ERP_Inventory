@@ -1,15 +1,26 @@
 export interface Category { id:string; name:string }
 export interface ProductModel { id:string; name:string; description:string; categoryId:string; imageId?:string }
-export interface Product { id:string; modelId:string; active:boolean; imageId?:string; code:string; name:string; color?:string; size?:string; unit:string; price:number }
+export interface Product { id:string; modelId:string; active:boolean; imageId?:string; description?:string; categoryId?:string; code:string; name:string; color?:string; size?:string; unit:string; price:number }
 export interface SaleLine { productId:string; name:string; unit:string; quantity:number; price:number }
 export interface InputLine { productId:string; quantity:number; price:number }
 export interface BillDetails {sellerName:string;sellerAddress:string;sellerTaxId:string;buyerName:string;buyerAddress:string;buyerTaxId:string;buyerRegistration?:string;bookNumber:string;receiverName:string}
 export interface Shop {name:string;address:string;taxId:string}
 export interface Sale { id:string; code:string; status:'draft'|'confirmed'|'cancelled'; revision:number; lines:SaleLine[]; total:number; createdAt:string; updatedAt:string; document?:BillDetails }
-export interface StockMovement { id:string; productId:string; quantity:number; type:'opening'|'receipt'|'sale'|'revision'|'cancel'|'deduction'|'deduction-undo'; reference:string; createdAt:string }
+export interface StockMovement { id:string; productId:string; quantity:number; type:'opening'|'receipt'|'sale'|'revision'|'cancel'|'deduction'|'deduction-undo'|'count'; reference:string; createdAt:string; countedQuantity?:number }
 export interface DemoState { version:2; categories:Category[]; models:ProductModel[]; products:Product[]; sales:Sale[]; movements:StockMovement[]; history:Sale[]; shop?:Shop }
 export interface StoragePort { getItem(key:string):string|null; setItem(key:string,value:string):void }
 export const STORAGE_KEY='s4-demo-v1';
+export function countStock(s:DemoState,id:string,productId:string,countedQuantity:number):DemoState {
+ const p=s.products.find(p=>p.id===productId);
+ if(!p)throw new Error('ไม่พบสินค้า');
+ if(!Number.isSafeInteger(countedQuantity)||countedQuantity<0)throw new Error('จำนวนที่นับได้ต้องเป็นจำนวนเต็มตั้งแต่ 0 ขึ้นไป');
+ const previous=s.movements.find(m=>m.type==='count'&&m.reference===id);
+ if(previous){if(previous.productId!==productId||previous.countedQuantity!==countedQuantity)throw new Error('รหัสตรวจนับนี้มีข้อมูลอื่นแล้ว');return s;}
+ if(!p.active)throw new Error('สินค้านี้ปิดใช้งานแล้ว');
+ const next=structuredClone(s);
+ next.movements.push({id:`count-${id}-${productId}`,productId,quantity:countedQuantity-stock(s,productId),countedQuantity,type:'count',reference:id,createdAt:new Date().toISOString()});
+ return next;
+}
 export function deductStock(s:DemoState,id:string,productId:string,quantity:number):DemoState{
  const p=s.products.find(p=>p.id===productId);if(!p)throw new Error('ไม่พบสินค้า');if(!Number.isSafeInteger(quantity)||quantity<=0)throw new Error('จำนวนต้องเป็นจำนวนเต็มมากกว่า 0');
  const previous=s.movements.find(m=>m.type==='deduction'&&m.reference===id);if(previous){if(previous.productId!==productId||previous.quantity!==-quantity)throw new Error('รหัสรายการนี้มีข้อมูลอื่นแล้ว');return s;}
@@ -31,10 +42,7 @@ const now=()=>new Date().toISOString();
 const copy=(s:DemoState):DemoState=>structuredClone(s);
 const safe=(n:number)=>Number.isSafeInteger(n);
 export const productName=(p:Product)=>[p.name,p.color,p.size].filter(Boolean).join(' / ');
-export function seed():DemoState {
- const products:Product[]=[{id:'a',modelId:'model-a',active:true,code:'DEMO-A',name:'ชุดชั้นในรุ่น A',color:'ดำ',size:'M',unit:'แพ็ก',price:18000},{id:'b',modelId:'model-b',active:true,code:'DEMO-B',name:'ชุดชั้นในรุ่น B',unit:'ชิ้น',price:6000},{id:'c',modelId:'model-c',active:true,code:'DEMO-C',name:'ชุดชั้นในรุ่น C',color:'ครีม',size:'L',unit:'แพ็ก',price:20000}];
- return {version:2,categories:[{id:'uncategorized',name:'ยังไม่จัดประเภท'}],models:products.map(p=>({id:p.modelId,name:p.name,description:'',categoryId:'uncategorized'})),products,sales:[],history:[],movements:products.map((p,i)=>({id:`opening-${p.id}`,productId:p.id,quantity:[12,20,0][i],type:'opening',reference:'opening',createdAt:'2026-10-13T00:00:00+07:00'}))};
-}
+export function seed():DemoState {return {version:2,categories:[{id:'uncategorized',name:'ยังไม่จัดประเภท'}],models:[],products:[],sales:[],history:[],movements:[]};}
 export function stock(s:DemoState,id:string):number { return s.movements.filter(m=>m.productId===id).reduce((n,m)=>n+m.quantity,0); }
 const total=(lines:SaleLine[])=>lines.reduce((n,l)=>n+l.quantity*l.price,0);
 function normalize(s:DemoState,inputs:InputLine[],allowedInactive=new Map<string,number>()):SaleLine[] {
@@ -107,7 +115,7 @@ export const dateTime=(value:string)=>new Intl.DateTimeFormat('th-TH',{dateStyle
 function validState(value:unknown,legacy=false):value is DemoState {
  if(!value||typeof value!=='object')return false;
  const s=value as DemoState;
- if((legacy?(value as {version:number}).version!==1:s.version!==2)||!Array.isArray(s.products)||!s.products.length||!Array.isArray(s.sales)||!Array.isArray(s.history)||!Array.isArray(s.movements))return false;
+ if((legacy?(value as {version:number}).version!==1:s.version!==2)||!Array.isArray(s.products)||!Array.isArray(s.sales)||!Array.isArray(s.history)||!Array.isArray(s.movements))return false;
  const text=(v:unknown)=>typeof v==='string'&&v.length>0;
  const date=(v:unknown)=>text(v)&&Number.isFinite(Date.parse(v as string));
  const unique=(values:string[])=>new Set(values).size===values.length;
@@ -118,8 +126,11 @@ function validState(value:unknown,legacy=false):value is DemoState {
   if(!s.products.every(p=>typeof p.active==='boolean'&&s.models.some(m=>m.id===p.modelId&&m.name===p.name)&&(p.imageId===undefined||text(p.imageId)))||!unique(s.products.map(p=>p.code.trim().toLocaleLowerCase('th'))))return false;
   if(!unique(s.products.map(p=>JSON.stringify([p.modelId,(p.color??'').trim().toLocaleLowerCase('th'),(p.size??'').trim().toLocaleLowerCase('th')]))))return false;
  }
+ if(!s.products.every(p=>(p.description===undefined||(typeof p.description==='string'&&p.description.length<=1000))&&(p.categoryId===undefined||s.categories.some(c=>c.id===p.categoryId))))return false;
  const ids=new Set(s.products.map(p=>p.id));
- if(!s.movements.every(m=>m&&text(m.id)&&ids.has(m.productId)&&safe(m.quantity)&&['opening','receipt','sale','revision','cancel','deduction','deduction-undo'].includes(m.type)&&text(m.reference)&&date(m.createdAt)&&(m.type!=='opening'||m.quantity>=0))||!unique(s.movements.map(m=>m.id)))return false;
+ if(!s.movements.every(m=>m&&text(m.id)&&ids.has(m.productId)&&safe(m.quantity)&&['opening','receipt','sale','revision','cancel','deduction','deduction-undo','count'].includes(m.type)&&text(m.reference)&&date(m.createdAt)&&(m.type!=='opening'||m.quantity>=0))||!unique(s.movements.map(m=>m.id)))return false;
+ if(s.movements.some(m=>m.type==='count'&&(!safe(m.countedQuantity as number)||(m.countedQuantity as number)<0))||!unique(s.movements.filter(m=>m.type==='count').map(m=>m.reference)))return false;
+ const running=new Map<string,number>();for(const movement of s.movements){const after=(running.get(movement.productId)??0)+movement.quantity;if(movement.type==='count'&&after!==movement.countedQuantity)return false;running.set(movement.productId,after);}
  if(s.movements.some(m=>(m.type==='receipt'&&m.quantity<=0)||(['sale','revision','cancel'].includes(m.type)&&!s.sales.some(sale=>sale?.id===m.reference))))return false;
  if(s.movements.some(m=>(m.type==='deduction'&&m.quantity>=0)||(m.type==='deduction-undo'&&!s.movements.some(original=>original.type==='deduction'&&original.reference===m.reference&&original.productId===m.productId&&original.quantity===-m.quantity))))return false;
  if(!unique(s.movements.filter(m=>m.type==='deduction').map(m=>m.reference))||!unique(s.movements.filter(m=>m.type==='deduction-undo').map(m=>m.reference)))return false;

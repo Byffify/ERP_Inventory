@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "name": "dirty catalog navigation offers stay and discard without losing input while staying",
+      "status": "passed"
+    },
+    {
+      "name": "category stays staged with catalog and is discarded with unfinished model",
+      "status": "passed"
+    },
+    {
+      "name": "simple existing price edit skips variant generation and saves without review wizard",
+      "status": "passed"
+    },
+    {
+      "name": "sale search and category filters find products and empty stock cannot be added",
+      "status": "passed"
+    },
+    {
+      "name": "oversell is tied to product quantity; revision can reuse stock already on that bill",
+      "status": "passed"
+    },
+    {
+      "name": "bill summary and zoom remain readable; new bill opens clean editor",
+      "status": "passed"
+    },
+    {
+      "name": "sale selection exit restores focus and handwritten stock history stays in stock",
+      "status": "passed"
+    },
+    {
+      "name": "retired pitch route contains no demonstration content",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

@@ -1,4 +1,4 @@
-import type {DemoState,Product,ProductModel} from './domain';
+import {stock,type DemoState,type Product,type ProductModel} from './domain';
 export interface VariantInput {id:string;code:string;color?:string;size?:string;unit:string;price:number;openingQuantity:number;active:boolean;imageId?:string}
 export interface ModelInput extends ProductModel {variants:VariantInput[]}
 const key=(value:string)=>value.trim().toLocaleLowerCase('th');
@@ -6,6 +6,17 @@ const required=(value:string,label:string,max=120)=>{if(typeof value!=='string'|
 const optional=(value?:string)=>value?.trim()||undefined;
 export function skuLocked(s:DemoState,id:string){return s.movements.some(m=>m.productId===id&&(m.type!=='opening'||m.quantity>0))||[...s.sales,...s.history].some(sale=>sale.lines.some(l=>l.productId===id));}
 export function resolvedImage(s:DemoState,p:Product){return p.imageId??s.models.find(m=>m.id===p.modelId)?.imageId;}
+export function canDeleteModel(s:DemoState,id:string){return s.models.some(m=>m.id===id)&&s.products.filter(p=>p.modelId===id).every(p=>stock(s,p.id)===0&&!skuLocked(s,p.id));}
+export function deleteModel(s:DemoState,id:string):DemoState{
+ if(!s.models.some(m=>m.id===id))throw new Error('ไม่พบรุ่นสินค้า');
+ if(!canDeleteModel(s,id))throw new Error('สินค้านี้มียอดหรือประวัติ ไม่สามารถลบถาวรได้ กรุณาปิดใช้งานแทน');
+ const next=structuredClone(s),ids=new Set(s.products.filter(p=>p.modelId===id).map(p=>p.id));
+ next.models=next.models.filter(m=>m.id!==id);next.products=next.products.filter(p=>!ids.has(p.id));next.movements=next.movements.filter(m=>!ids.has(m.productId));return next;
+}
+export function archiveModel(s:DemoState,id:string):DemoState{
+ if(!s.models.some(m=>m.id===id))throw new Error('ไม่พบรุ่นสินค้า');
+ const next=structuredClone(s);next.products.filter(p=>p.modelId===id).forEach(p=>p.active=false);return next;
+}
 export function addCategory(s:DemoState,id:string,name:string):DemoState{
  name=required(name,'ชื่อประเภท');
  if(s.categories.some(c=>c.id===id||key(c.name)===key(name)))throw new Error('ชื่อประเภทหรือรหัสประเภทซ้ำ กรุณาเลือกประเภทเดิม');

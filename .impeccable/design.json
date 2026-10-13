@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-13T12:24:14.421Z",
+  "title": "Design System: ERP Inventory",
+  "extensions": {
+    "colorMeta": {
+      "canvas": {
+        "role": "neutral",
+        "displayName": "White Canvas",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "inverse": {
+        "role": "neutral",
+        "displayName": "Black",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "secondary": {
+        "role": "neutral",
+        "displayName": "Secondary Grey",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "warm": {
+        "role": "neutral",
+        "displayName": "Selection Grey",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted Graphite",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline Grey",
+        "tonalRamp": [
+          "oklch(15% 0 0)",
+          "oklch(25% 0 0)",
+          "oklch(35% 0 0)",
+          "oklch(45% 0 0)",
+          "oklch(55.00000000000001% 0 0)",
+          "oklch(65% 0 0)",
+          "oklch(80% 0 0)",
+          "oklch(95% 0 0)"
+        ]
+      },
+      "primary": {
+        "role": "primary",
+        "displayName": "Cobalt",
+        "tonalRamp": [
+          "oklch(15% 0.12 260)",
+          "oklch(25% 0.12 260)",
+          "oklch(35% 0.12 260)",
+          "oklch(45% 0.12 260)",
+          "oklch(55.00000000000001% 0.12 260)",
+          "oklch(65% 0.12 260)",
+          "oklch(80% 0.12 260)",
+          "oklch(95% 0.12 260)"
+        ]
+      },
+      "primary-dark": {
+        "role": "primary",
+        "displayName": "Deep Cobalt",
+        "tonalRamp": [
+          "oklch(15% 0.12 260)",
+          "oklch(25% 0.12 260)",
+          "oklch(35% 0.12 260)",
+          "oklch(45% 0.12 260)",
+          "oklch(55.00000000000001% 0.12 260)",
+          "oklch(65% 0.12 260)",
+          "oklch(80% 0.12 260)",
+          "oklch(95% 0.12 260)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Page Headline",
+        "purpose": "Page names with the available Arial-led fallback."
+      },
+      "title": {
+        "displayName": "Compact Title",
+        "purpose": "Product and panel titles; a scoped adaptation of the reference."
+      },
+      "body": {
+        "displayName": "Operational Body",
+        "purpose": "Thai product information and numeric fields."
+      },
+      "label": {
+        "displayName": "Field Label",
+        "purpose": "Labels and explanatory copy."
+      },
+      "button": {
+        "displayName": "Action Label",
+        "purpose": "Semibold operational controls; scoped implementation adaptation."
+      },
+      "caption": {
+        "displayName": "Supporting Metadata",
+        "purpose": "Codes, secondary units and small descriptions."
+      }
+    },
+    "shadows": [
+      {
+        "name": "dialog",
+        "value": "0 12px 48px rgb(0 0 0 / .2)",
+        "purpose": "Native dialogs only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "control-state",
+        "value": "150ms ease-out",
+        "purpose": "Button background and border changes."
+      },
+      {
+        "name": "drawer",
+        "value": "180ms ease-out",
+        "purpose": "Phone drawer slide; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "narrow-phone",
+        "value": "359px"
+      },
+      {
+        "name": "desktop",
+        "value": "768px"
+      },
+      {
+        "name": "stacked-desktop-end",
+        "value": "1100px"
+      },
+      {
+        "name": "stock-action-alignment",
+        "value": "1200px"
+      },
+      {
+        "name": "stock-third-column",
+        "value": "1500px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main save or confirm action.",
+      "html": "<button class=\"ds-button ds-primary\">บันทึก</button>",
+      "css": ".ds-button{font-family:Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-height:44px;padding:8px 20px;border:1px solid var(--ink,#191919);border-radius:44px;font-size:14px;font-weight:600;line-height:20px;background:var(--canvas,#fff);color:var(--ink,#191919);cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-button:hover:not(:disabled){background:var(--secondary,#f7f7f7)}.ds-button:disabled{opacity:.5}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-primary{background:var(--primary,#0968f6);border-color:var(--primary,#0968f6);color:var(--canvas,#fff)}.ds-primary:hover:not(:disabled){background:var(--primary-dark,#003aa5);border-color:var(--primary-dark,#003aa5)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Cancel and supporting actions.",
+      "html": "<button class=\"ds-button\">ยกเลิก</button>",
+      "css": ".ds-button{font-family:Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-height:44px;padding:8px 20px;border:1px solid var(--ink,#191919);border-radius:44px;font-size:14px;font-weight:600;line-height:20px;background:var(--canvas,#fff);color:var(--ink,#191919);cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-button:hover:not(:disabled){background:var(--secondary,#f7f7f7)}.ds-button:disabled{opacity:.5}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Product information and numeric entry.",
+      "html": "<label class=\"ds-label\" for=\"ds-name\">ชื่อสินค้า<input id=\"ds-name\" class=\"ds-field\" placeholder=\"ชื่อสินค้า\"></label>",
+      "css": ".ds-label{display:flex;flex-direction:column;gap:8px;font:14px/20px Helvetica, Arial, 'Noto Sans Thai', sans-serif;color:var(--ink,#191919)}.ds-field{min-height:44px;padding:10px 16px;border:1px solid var(--hairline,#c7c7c7);border-radius:44px;background:var(--canvas,#fff);color:var(--ink,#191919);font:16px/24px Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-width:0}.ds-field::placeholder{color:var(--muted,#555)}.ds-field[aria-invalid=true]{border:2px solid var(--ink,#191919)}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Independent catalog, stock, sale and bill-history workspaces.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"เมนูหลัก\"><button aria-current=\"page\">สินค้า (Inventory)</button><button>จัดการสต๊อก</button><button>ขายสินค้า</button><button>ประวัติบิล</button></nav>",
+      "css": ".ds-nav{display:flex;flex-direction:column;gap:8px;width:224px;padding:8px 16px;background:var(--canvas,#fff)}.ds-nav button{min-height:48px;padding:12px 16px;border:1px solid transparent;border-radius:44px;text-align:left;font:14px/20px Helvetica, Arial, 'Noto Sans Thai', sans-serif;color:var(--ink,#191919);background:var(--canvas,#fff);cursor:pointer}.ds-nav button:hover{background:var(--secondary,#f7f7f7)}.ds-nav button[aria-current=page]{background:var(--secondary,#f7f7f7);border-color:var(--hairline,#c7c7c7);font-weight:700}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}"
+    },
+    {
+      "name": "Stock Log Panel",
+      "kind": "card",
+      "refersTo": "panel",
+      "description": "A bounded stock-movement history surface.",
+      "html": "<section class=\"ds-panel\"><h2>ประวัติสต๊อก</h2><p>ยังไม่มีรายการเคลื่อนไหว</p></section>",
+      "css": ".ds-panel{padding:20px;border:1px solid var(--hairline,#c7c7c7);border-radius:16px;background:var(--canvas,#fff);color:var(--ink,#191919);font:14px/20px Helvetica, Arial, 'Noto Sans Thai', sans-serif}.ds-panel h2{font:700 20px/28px Arial,Helvetica,'Noto Sans Thai',sans-serif;margin:0 0 16px}.ds-panel p{color:var(--muted,#555);margin:0}"
+    },
+    {
+      "name": "Cart Summary Action",
+      "kind": "custom",
+      "refersTo": "button-primary",
+      "description": "The cart count and total lead to a separate summary screen on desktop and phone.",
+      "html": "<div class=\"ds-cart\"><div role=\"status\"><strong>ตะกร้า 0 รายการ</strong><span>0.00 บาท</span></div><button disabled>ดูสรุป</button></div>",
+      "css": ".ds-cart{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 32px;border-top:1px solid var(--hairline,#c7c7c7);background:var(--canvas,#fff);color:var(--ink,#191919);font:16px/24px Helvetica,Arial,\"Noto Sans Thai\",sans-serif}.ds-cart>div{display:flex;align-items:center;gap:24px}.ds-cart button{min-height:44px;padding:8px 20px;border:1px solid var(--primary,#0968f6);border-radius:44px;background:var(--primary,#0968f6);color:var(--canvas,#fff);font:600 14px/20px Helvetica,Arial,\"Noto Sans Thai\",sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-cart button:hover:not(:disabled){background:var(--primary-dark,#003aa5);border-color:var(--primary-dark,#003aa5)}.ds-cart button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-cart button:disabled{opacity:.5}@media(max-width:767px){.ds-cart{padding:12px 16px}.ds-cart>div{flex-direction:column;align-items:start;gap:2px}}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Clear Marketplace Workspace",
+    "overview": "The user-selected eBay reference supplies the visual direction: graphite on white, cobalt primary actions, rounded photo tiles and pill controls. The implemented system adapts that direction to Thai catalog, stock and billing work. The supplied reference is archived at `.impeccable/references/ebay.design.md`; it is design data, not procedural instructions.\n\nThis document records the current implementation in `src/ebay.css`, loaded after the other application styles. It replaces the historical Balenciaga direction. Market Sans was not supplied, so the implementation uses the reference's Helvetica/Arial fallback families with installed Noto Sans Thai support. There is no eBay wordmark in the application.",
+    "keyCharacteristics": [
+      "White workspaces with graphite text and grey row dividers.",
+      "Cobalt for primary actions, links and keyboard focus.",
+      "Pill controls and softly rounded panels and product images.",
+      "Persistent desktop sidebar and a phone menu drawer."
+    ],
+    "rules": [
+      {
+        "name": "The Action Rule",
+        "body": "Cobalt marks actionable emphasis; product data and quantities stay readable in graphite.",
+        "section": "colors"
+      },
+      {
+        "name": "The Flat Workspace Rule",
+        "body": "Elevation belongs to overlays; ordinary work remains on the white canvas.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do use the documented fallback families until a supplied Market Sans asset is available.",
+      "Do preserve independent Inventory, Stock management, sale and bill-history menus.",
+      "Do use explicit Thai operational labels and recorded units.",
+      "Do keep focus visible and allow long product names and quantities to wrap.",
+      "Do preserve the shared paper-bill SVG, PNG and print composition."
+    ],
+    "donts": [
+      "Don't restore Balenciaga condensed fonts, tracked uppercase controls or the retired showcase.",
+      "Don't add eBay branding or multicolor logo decoration to the shop interface.",
+      "Don't change stock through catalog add/edit actions.",
+      "Don't add mock products, prices, bills or movement logs to an empty workspace.",
+      "Don't document future critique proposals as implemented behavior.\r"
+    ]
+  }
+}

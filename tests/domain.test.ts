@@ -1,5 +1,6 @@
+import {seed} from './fixtures.mjs';
 import {describe,it,expect} from 'vitest';
-import {seed,stock,saveDraft,confirmSale,reviseSale,cancelSale,receiveStock,parsePrice,loadState,commit} from '../src/domain';
+import {stock,saveDraft,confirmSale,reviseSale,cancelSale,receiveStock,parsePrice,loadState,commit} from '../src/domain';
 const line=(productId='a',quantity=3,price=18000)=>({productId,quantity,price});
 const draft=(s=seed(),lines=[line()])=>saveDraft(s,'sale-1',lines,'2026-10-13T01:00:00+07:00');
 const sold=()=>confirmSale(draft(),'sale-1');
@@ -27,10 +28,10 @@ it.each(['-1','1.001','','abc','1e2'])('rejects malformed price %s',p=>expect(()
 describe('storage boundary',()=>{
 const storage=()=>{const values=new Map<string,string>();return {getItem:(k:string)=>values.get(k)??null,setItem:(k:string,v:string)=>{values.set(k,v)}}};
 it('initializes only absent storage and reloads confirmed bill',()=>{const st=storage();const initial=loadState(st);commit(st,initial,sold());const loaded=loadState(st);expect(stock(loaded,'a')).toBe(9);expect(loaded.sales[0].status).toBe('confirmed')});
-it('failed storage write leaves original saved state intact',()=>{const st=storage();const initial=loadState(st);const broken={getItem:st.getItem,setItem:()=>{throw new Error('quota')}};expect(()=>commit(broken,initial,sold())).toThrow(/บันทึก/);expect(stock(loadState(st),'a')).toBe(12)});
+it('failed storage write leaves original saved state intact',()=>{const st=storage();st.setItem('s4-demo-v1',JSON.stringify(seed()));const initial=loadState(st);const broken={getItem:st.getItem,setItem:()=>{throw new Error('quota')}};expect(()=>commit(broken,initial,sold())).toThrow(/บันทึก/);expect(stock(loadState(st),'a')).toBe(12)});
 it('corrupt storage never silently resets',()=>{const st={getItem:()=>'{broken',setItem:()=>{throw new Error('should not write')}};expect(()=>loadState(st)).toThrow(/เสียหาย/)});
 it('well-formed but invalid snapshot is rejected',()=>{const st=storage();const s=seed();s.movements[0].quantity=-99;st.setItem('s4-demo-v1',JSON.stringify(s));expect(()=>loadState(st)).toThrow(/เสียหาย/)});
 it('rejects impossible negative receipts in saved data',()=>{const st=storage();const s=seed();s.movements.push({id:'bad',reference:'r',productId:'a',quantity:-1,type:'receipt',createdAt:'2026-10-13T00:00:00+07:00'});st.setItem('s4-demo-v1',JSON.stringify(s));expect(()=>loadState(st)).toThrow(/เสียหาย/)});
 it('rejects orphan sale movements instead of silently losing a bill',()=>{const st=storage();const s=sold();s.sales=[];st.setItem('s4-demo-v1',JSON.stringify(s));expect(()=>loadState(st)).toThrow(/เสียหาย/)});
-it('stale tab snapshot cannot overwrite another transaction',()=>{const st=storage();const initial=loadState(st);commit(st,initial,sold());expect(()=>commit(st,initial,receiveStock(initial,'r2','b',1))).toThrow(/แท็บ/);expect(stock(loadState(st),'a')).toBe(9)});
+it('stale tab snapshot cannot overwrite another transaction',()=>{const st=storage();st.setItem('s4-demo-v1',JSON.stringify(seed()));const initial=loadState(st);commit(st,initial,sold());expect(()=>commit(st,initial,receiveStock(initial,'r2','b',1))).toThrow(/แท็บ/);expect(stock(loadState(st),'a')).toBe(9)});
 });

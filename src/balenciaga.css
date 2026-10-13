@@ -1,0 +1,308 @@
+/* Operational surfaces from the supplied Balenciaga system.
+   Imported last; prior styles remain compatible with archived components. */
+@media screen {
+  :root {
+    --canvas: #ffffff;
+    --ink: #000000;
+    --inverse: #000000;
+    --secondary: #ffffff;
+    --warm: #ffffff;
+    --muted: rgb(0 0 0 / .7);
+    --hairline: rgb(0 0 0 / .3);
+    --radius: 4px;
+    --shadow: #aaaaac;
+    --font-body: "BB-Regular", "Helvetica Neue", Helvetica, Arial, "Noto Sans Thai", sans-serif;
+    --font-display: "BB-CondBold", "Helvetica Neue", Helvetica, Arial, "Noto Sans Thai", sans-serif;
+    --ease: cubic-bezier(.4, 0, .2, 1);
+    --ease-out-quint: cubic-bezier(.22, 1, .36, 1);
+    --ease-fade: cubic-bezier(.19, 1, .22, 1);
+    --ease-transform: cubic-bezier(.22, 1, .36, 1);
+    --ease-bounce: cubic-bezier(.65, -.55, .25, 1.5);
+    font-family: var(--font-body);
+    font-size: 14px;
+    line-height: 20px;
+    background: var(--canvas);
+    color: var(--ink);
+    scrollbar-color: var(--ink) var(--canvas);
+  }
+  body { background: var(--canvas); }
+  button, input, select, textarea { font-family: var(--font-body); }
+  button {
+    min-height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+    letter-spacing: .36px;
+    text-transform: uppercase;
+    gap: 8px;
+    box-shadow: none;
+    transition: opacity 150ms var(--ease-fade);
+  }
+  button:hover:not(:disabled) { background: var(--canvas); opacity: .85; }
+  button.primary, button.primary:hover:not(:disabled) { background: var(--ink); color: var(--canvas); }
+  button:disabled { opacity: .45; }
+  input, select, textarea {
+    min-height: 28px;
+    height: 28px;
+    padding: 1px 6px;
+    border: 1px solid var(--ink);
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 20px;
+    background: var(--canvas);
+    color: var(--ink);
+  }
+  textarea { height: auto; min-height: 64px; padding: 6px; }
+  input[readonly] { background: var(--canvas); }
+  input::placeholder, textarea::placeholder { color: var(--muted); opacity: 1; }
+  input[aria-invalid=true], select[aria-invalid=true], textarea[aria-invalid=true] { border: 2px solid var(--ink); }
+  button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible,
+  summary:focus-visible, a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  ::selection { background: var(--ink); color: var(--canvas); }
+  h1, h2, .catalog-step-title, .inventory-name, .model-row-copy h2, .stock-name,
+  .bill-readable-summary h2, .empty-state h2, .dialog h2, .bill-zoom-heading h2 {
+    font-family: var(--font-display);
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+  }
+  h3 { font-family: var(--font-display); font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: .42px; text-transform: uppercase; }
+  strong { font-weight: 700; }
+  small, .small, .muted.small { font-size: 12px; line-height: 16px; }
+  label { gap: 4px; font-size: 12px; line-height: 16px; letter-spacing: .36px; }
+  summary { min-height: 40px; padding: 12px 0; font-size: 12px; font-weight: 400; letter-spacing: .36px; }
+  .app-header { background: var(--canvas); border-bottom: 1px solid var(--ink); }
+  .header-inner, .app-header .header-inner { padding: 8px 16px; min-height: 44px; gap: 12px; }
+  .project-name, .app-header .project-name { font-size: 14px; font-weight: 400; line-height: 20px; letter-spacing: .42px; }
+  .local-note { font-size: 12px; }
+  .mobile-break { display: none; }
+  .container { padding: 20px 16px calc(80px + env(safe-area-inset-bottom)); }
+  .page-heading { gap: 8px; margin-bottom: 12px; }
+  .intro { margin-bottom: 16px; font-size: 14px; line-height: 20px; max-width: 70ch; }
+  .back-button, .icon-button { width: 40px; min-height: 40px; padding: 0 8px; }
+  .nav-wrap { border-color: var(--ink); background: var(--canvas); }
+  .navigation { gap: 0; }
+  .navigation button {
+    min-height: 52px; padding: 4px 8px; gap: 4px; border-radius: 0;
+    font-size: 12px; font-weight: 400; line-height: 16px; letter-spacing: .36px;
+  }
+  .navigation button[aria-current=page] { background: var(--canvas); color: var(--ink); font-weight: 700; box-shadow: inset 0 2px var(--ink); }
+  .message, .message.error, .stock-change, .receipt-preview, .remaining-summary,
+  .order-summary, .bill-paper, .inventory-filter-panel, .stock-card {
+    background: var(--canvas); border: 1px solid var(--ink); border-radius: 4px;
+    box-shadow: none; padding: 12px; gap: 12px;
+  }
+  .message { margin-bottom: 16px; font-size: 14px; line-height: 20px; }
+  .message svg { margin-top: 0; }
+  .message .text-button { min-height: 28px; }
+  .field-error { font-size: 12px; line-height: 16px; color: var(--ink); padding: 4px 0; }
+  .search-field, .catalog-filters .search-field { margin: 0; }
+  .search-field svg { left: 8px; top: 4px; width: 20px; height: 20px; color: var(--ink); }
+  .search-field input, .inventory-search-row .search-field input { min-height: 28px; height: 28px; padding: 1px 6px 1px 36px; font-size: 14px; }
+  .text-button, .inventory-create { min-height: 40px; padding: 0; border-radius: 0; font-size: 12px; letter-spacing: .36px; }
+  .product-photo { width: 96px; height: 96px; border-radius: 0; background: var(--canvas); color: var(--ink); }
+  .product-photo>span { font-size: 12px; line-height: 16px; }
+  .product-photo.photo-failed { border: 1px solid var(--ink); }
+  .product-code, .inventory-code { font-size: 12px; line-height: 16px; letter-spacing: .36px; }
+  .empty-state { padding: 24px 0; gap: 12px; }
+  .working-note, .deduction-help, .tools-footer, .stock-toolbar p { font-size: 14px; line-height: 20px; }
+  .tools-footer { margin-top: 32px; padding-top: 16px; }
+
+  /* One model per row; photography anchors the grouped variant list. */
+  .inventory-toolbar { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; margin-bottom: 16px; }
+  .inventory-toolbar>.intro { flex: 1 1 240px; margin: 0; }
+  .inventory-toolbar .search-field { flex: 1 1 280px; }
+  .inventory-toolbar>label:not(.search-field) { flex: 0 1 180px; }
+  .inventory-list-intro { margin-bottom: 12px; gap: 12px; }
+  .inventory-count { font-size: 12px; line-height: 16px; }
+  .inventory-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .inventory-model { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 16px 0; border-top: 1px solid var(--hairline); min-width: 0; }
+  .inventory-model-heading { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+  .inventory-model-heading>.product-photo { width: 96px; height: 96px; }
+  .inventory-model-heading>div, .inventory-model-heading>span { min-width: 0; flex: 1; }
+  .inventory-model-heading h2 { margin: 0 0 4px; }
+  .inventory-model-heading p { font-size: 12px; line-height: 16px; margin-top: 4px; }
+  .inventory-options { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; min-width: 0; }
+  .inventory-option { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 4px 0; font-size: 14px; line-height: 20px; border-bottom: 1px solid var(--hairline); min-width: 0; }
+  .inventory-option>span:first-child { min-width: 0; overflow-wrap: anywhere; }
+  .inventory-option strong { font-size: 14px; line-height: 20px; font-weight: 400; font-variant-numeric: tabular-nums; }
+  .inventory-option>span:last-child { font-variant-numeric: tabular-nums; text-align: right; }
+  .inventory-option small { display: block; margin-top: 2px; font-size: 12px; line-height: 16px; color: var(--muted); }
+  .inventory-result-count { font-size: 12px; line-height: 16px; margin-bottom: 12px; }
+  .inventory-category { max-width: 280px; margin: 12px 0; }
+  .inventory-main-actions { display: flex; align-items: start; gap: 8px; }
+  .inventory-main-actions button { width: 100%; }
+  .inventory-support { margin-top: 32px; padding-top: 16px; border-top: 1px solid var(--ink); }
+  .inventory-support>.actions, .inventory-support>div { gap: 8px; margin-top: 12px; }
+  .inventory-support h2 { margin-bottom: 8px; }
+  .order-banner { position: sticky; top:8px; bottom:auto; z-index: 4; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin: 16px 0; padding: 12px; background: var(--canvas); border: 1px solid var(--ink); border-radius: 4px; }
+  .order-banner strong { font-variant-numeric: tabular-nums; }
+  .inventory-filter-panel { margin-top: 8px; gap: 12px; }
+  .inventory-category-context { font-size: 12px; margin-top: 8px; }
+  .inventory-status-filters { gap: 8px; margin: 12px 0; }
+  .inventory-status-filters button { min-height: 40px; padding: 0 12px; font-size: 12px; border-color: var(--ink); }
+  .inventory-filter-button { min-height: 40px; border-radius: 4px; font-size: 12px; padding: 0 12px; flex-direction: row; }
+  .inventory-card { border-radius: 0; padding: 12px 0; border: 0; border-top: 1px solid var(--hairline); gap: 12px; }
+  .inventory-identity { border-radius: 0; min-height: 64px; font-size: 14px; }
+  .inventory-variant, .inventory-type, .inventory-inactive, .inventory-stock-label { font-size: 14px; line-height: 20px; }
+  .inventory-status { border-radius: 2px; font-size: 12px; padding: 2px 6px; }
+  .inventory-quantity strong, .inventory-quantity strong.long-number { font-size: 22px; line-height: 24px; }
+  .inventory-quantity>div>span { font-size: 14px; }
+  .inventory-actions button { min-height: 40px; padding: 0 12px; font-size: 12px; }
+  .inventory-deduction { gap: 8px; padding-top: 12px; }
+  .inventory-deduction>label, .inventory-deduction .text-button { font-size: 12px; }
+
+  /* Native dialogs preserve focus; only dialogs use grey elevation. */
+  .dialog, .selection-dialog, .bill-zoom-dialog {
+    width: min(680px, calc(100% - 24px)); max-width: 680px;
+    max-height: calc(100dvh - 24px); padding: 20px; overflow: auto;
+    border: 0; border-radius: 4px; background: var(--canvas); color: var(--ink);
+    box-shadow: 0 8px 32px rgb(170 170 172 / .5);
+  }
+  .dialog::backdrop, .selection-dialog::backdrop, .bill-zoom-dialog::backdrop { background: rgb(0 0 0 / .45); }
+  .selection-dialog>header, .selection-heading, .selection-dialog .dialog-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .selection-dialog h2, .stock-operation h2 { margin-bottom: 8px; }
+  .selection-dialog>.actions, .stock-operation>.actions { position: sticky; bottom: -20px; padding: 12px 0; background: var(--canvas); border-top: 1px solid var(--ink); margin-top: 16px; }
+  .selection-dialog .inventory-model-heading { padding: 0 0 16px; }
+  .selection-dialog .inventory-model-heading h3 { font-size: 22px; line-height: 24px; letter-spacing: 1.1px; font-weight: 700; }
+  .selection-heading h2 { margin: 0; }
+  .selection-footer { position: sticky; bottom: -20px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 0; margin-top: 12px; background: var(--canvas); border-top: 1px solid var(--ink); }
+  .selection-footer>p { font-size: 12px; line-height: 16px; }
+  .dialog-copy { gap: 12px; margin: 16px 0; }
+  .selection-row { display: grid; grid-template-columns: minmax(0, 1fr) 160px; align-items: center; gap: 12px; padding: 12px 0; border-top: 1px solid var(--hairline); min-width: 0; }
+  .selection-row>div:first-child { min-width: 0; }
+  .selection-row p, .selection-row small { font-size: 12px; line-height: 16px; margin-top: 4px; }
+  .quantity-control, .selection-quantity { display: grid; grid-template-columns: 40px minmax(0, 1fr) 40px; align-items: center; gap: 8px; }
+  .quantity-control button, .selection-quantity button, .inventory-deduction .quantity-control button { min-height: 40px; height: 40px; padding: 0; }
+  .quantity-control input, .selection-quantity input, .inventory-deduction .quantity-control input { min-height: 28px; height: 28px; padding: 1px 6px; text-align: center; font-size: 14px; font-variant-numeric: tabular-nums; }
+  .stock-operation { max-width: 680px; min-width: 0; background: var(--canvas); padding: 0; border: 0; border-radius: 0; box-shadow: none; }
+  .stock-operation label { margin-top: 12px; }
+  .stock-operation>.actions { bottom: 0; padding: 12px 0; }
+  .operation-products { display: flex; flex-direction: column; margin: 16px 0; }
+  .operation-products>button { width: 100%; min-height: 40px; padding: 12px 0; justify-content: space-between; text-align: left; border: 0; border-bottom: 1px solid var(--hairline); border-radius: 0; font-size: 14px; line-height: 20px; letter-spacing: 0; }
+  .operation-products>button>span:first-child { min-width: 0; }
+  .operation-products small { display: block; font-size: 12px; line-height: 16px; color: var(--muted); margin-top: 4px; }
+  .operation-preview { margin: 12px 0; padding: 12px 0; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); font-size: 14px; line-height: 20px; }
+  .operation-preview p+p { margin-top: 4px; }
+  .handwritten-mode { padding: 12px 0; margin-bottom: 12px; border-top: 1px solid var(--ink); border-bottom: 1px solid var(--ink); font-size: 14px; }
+
+  /* Catalog, order editor, and history share the compact operational rhythm. */
+  .workspace { gap: 20px; }
+  .editor-row, .review-row, .model-row, .sku-row, .variant-editor, .catalog-review-row { padding: 16px 0; gap: 12px; }
+  .line-title { margin-bottom: 12px; gap: 8px; }
+  .line-title .muted, .product-info .muted, .unit-price, .review-row p { font-size: 14px; line-height: 20px; }
+  .input-pair { gap: 12px; }
+  .input-pair label, .variant-grid label, .sale-filters label, .history-filters label { font-size: 12px; }
+  .input-pair input { font-size: 14px; }
+  .form-fields { gap: 16px; }
+  .catalog-toolbar { gap: 12px; margin-bottom: 16px; }
+  .catalog-filters, .sale-filters, .history-filters { gap: 12px; margin: 12px 0 16px; }
+  .catalog-info-grid { gap: 20px; }
+  .form-progress { margin-bottom: 20px; }
+  .form-progress li { font-size: 12px; font-weight: 400; padding-bottom: 8px; }
+  .form-progress li[aria-current=step] { font-weight: 700; }
+  .catalog-step-title { margin-bottom: 12px; }
+  .option-builder { padding: 16px 0; gap: 12px; }
+  .variant-builder { margin-top: 16px; }
+  .variant-editor .line-title { margin-bottom: 12px; }
+  .variant-grid { gap: 12px; }
+  .current-stock small { font-size: 12px; }
+  .category-add { gap: 8px; }
+  .checkbox-row { min-height: 40px; font-size: 12px; gap: 8px; }
+  .checkbox-row input { width: 20px; height: 20px; min-height: 20px; padding: 0; accent-color: var(--ink); }
+  .upload-label { min-height: 40px; padding: 0 12px; font-size: 12px; border-radius: 4px; margin-top: 8px; }
+  .model-overview { margin: 16px 0; gap: 16px; }
+  .model-overview .product-photo { width: 120px; height: 120px; }
+  .order-summary { gap: 12px; }
+  .order-summary h2 { font-size: 22px; }
+  .order-summary>.primary { min-height: 40px; }
+  .order-summary .muted { font-size: 12px; line-height: 16px; }
+  .summary-total { padding: 12px 0; }
+  .summary-total[hidden] { display: none; }
+  .plain-product { margin-top:20px;padding-top:16px;border-top:1px solid var(--hairline); }
+  .plain-product h3 { margin:0 0 12px; }
+  .plain-product>.primary { margin:16px 0 8px; }
+  .line-price summary { padding:0;min-height:28px;font-size:12px;letter-spacing:0; }
+  .line-price label { margin-top:8px; }
+  .summary-total strong, .bill-total, .remaining-summary strong, .bill-readable-total strong { font-size: 22px; line-height: 24px; }
+  .task-bar, .catalog-form-actions { bottom: calc(52px + env(safe-area-inset-bottom)); padding: 12px; gap: 8px; border-radius: 4px; margin-top: 16px; }
+  .task-bar>div, .task-bar strong { font-size: 14px; }
+  .add-products button { min-height: 40px; padding: 8px 0; font-size: 14px; letter-spacing: 0; }
+  .section-title { margin: 20px 0 12px; }
+  .bill-data-fields { margin-top: 16px; }
+  .bill-data-fields .form-fields { margin: 12px 0 16px; }
+  .stock-change { margin-top: 12px; font-size: 14px; }
+  .receive-form>label { margin: 16px 0; }
+  .receipt-preview { margin: 16px 0; }
+  .actions, .row-actions { gap: 8px; }
+  .sale-row { min-height: 40px; padding: 12px 0; gap: 12px; font-size: 14px; letter-spacing: 0; }
+  .sale-row small { font-size: 12px; line-height: 16px; }
+  .movement-history, .stock-more { margin-top: 20px; }
+  .movement-history p, .stock-more p { margin: 8px 0; padding: 8px 0; font-size: 14px; }
+  .remaining-summary { margin-bottom: 16px; }
+  .remaining-summary h2 { font-size: 12px; line-height: 16px; letter-spacing: .36px; margin-bottom: 8px; }
+  .bill-readable-summary { padding: 16px 0; margin-bottom: 16px; }
+  .bill-readable-summary ul { margin: 12px 0; }
+  .bill-readable-summary li { padding: 12px 0; }
+  .bill-readable-total { padding-top: 12px; gap: 12px; }
+  .bill-preview-heading, .bill-zoom-heading { gap: 12px; margin-bottom: 12px; }
+  .bill-preview-heading h2 { font-size: 14px; line-height: 20px; font-weight: 400; letter-spacing: .42px; }
+  .bill-actions { gap: 12px; }
+  .bill-workspace { align-items: start; }
+  .stock-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+  .stock-name { min-height: 28px; padding: 0; }
+  .stock-card-heading p, .stock-card-count>span:first-child, .deduct-label { font-size: 14px; }
+  .stock-card-count { padding: 12px 0; }
+  .stock-card-count strong, .stock-card-count strong.long-number { font-size: 22px; line-height: 24px; }
+  .stock-card-count>span:last-child { font-size: 14px; }
+  .stock-card-actions { gap: 8px; margin-top: 12px; }
+  .stock-card-actions button { min-height: 40px; padding: 0 12px; font-size: 12px; }
+  .pitch h1 { font-family: var(--font-display); font-weight: 700; letter-spacing: 1.1px; }
+  .pitch h1, .pitch h2 { color: var(--canvas); }
+}
+
+@media screen and (min-width: 768px) {
+  .container { padding: 20px 24px 40px; }
+  .header-inner, .app-header .header-inner { padding: 8px 24px; }
+  .nav-wrap { border-top: 0; }
+  .navigation { padding: 0 16px; gap: 8px; min-height: 44px; align-items: center; }
+  .navigation button { min-height: 28px; padding: 0 8px; gap: 8px; font-size: 12px; border: 1px solid var(--canvas); border-radius: 4px; }
+  .navigation button[aria-current=page] { border-color: var(--canvas); box-shadow: none; }
+  .inventory-model { grid-template-columns: minmax(240px, 1fr) minmax(200px, 1.1fr) 140px; align-items: start; gap: 20px; }
+  .inventory-model-heading>.product-photo { width: 112px; height: 112px; }
+  .inventory-grid { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .inventory-main-actions { align-self: center; }
+  .task-bar, .catalog-form-actions { bottom: 0; }
+  .order-summary { top: 16px; }
+  .catalog-filters, .history-filters { grid-template-columns: minmax(0, 1fr) 200px; }
+  .sale-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sale-filters .search-field { grid-column: 1/-1; }
+  .sku-row { grid-template-columns: 64px minmax(0, 1fr) 80px; gap: 12px; }
+  .sku-row .row-actions { grid-column: 2/-1; }
+  .model-row>.product-photo { width: 112px; height: 112px; }
+}
+
+@media screen and (max-width: 767px) {
+  .inventory-model-heading>.product-photo, .model-row>.product-photo { width: 64px; height: 64px; }
+  .inventory-model { gap: 8px; }
+  .inventory-toolbar .search-field { flex-basis: 100%; }
+  .inventory-toolbar>label:not(.search-field) { flex: 1 1 120px; }
+  .inventory-main-actions button { width: auto; min-width: 140px; }
+  .selection-dialog { padding: 16px; }
+  .selection-dialog>.actions, .selection-footer { bottom: -16px; }
+  .order-banner button { flex: 1 1 auto; }
+}
+
+@media screen and (max-width: 359px) {
+  .container { padding-left: 12px; padding-right: 12px; }
+  .selection-row { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .selection-quantity { width: 160px; }
+  .input-pair { grid-template-columns: minmax(0, 1fr); }
+  .navigation button { font-size: 12px; }
+}

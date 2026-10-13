@@ -1,0 +1,37 @@
+{
+  "results": [
+    {
+      "name": "sale opens one product list and repeated clicks update one cart line",
+      "status": "passed"
+    },
+    {
+      "name": "cart persists when returning to products and cannot exceed available stock",
+      "status": "passed"
+    },
+    {
+      "name": "one-page add and edit preserve one code per name/color/size and stock stays zero",
+      "status": "passed"
+    },
+    {
+      "name": "different color or size produces a distinct code without duplicating a kind",
+      "status": "passed"
+    },
+    {
+      "name": "locked identity remains safe while routine edit is one page and cancel protects dirty inputs",
+      "status": "passed"
+    },
+    {
+      "name": "photo survives save and reload with no wizard or stock effect",
+      "status": "passed"
+    },
+    {
+      "name": "simple product list cart and edit form fit desktop and phone",
+      "status": "passed"
+    },
+    {
+      "name": "category edits isolate one SKU and both Inventory and sale filters use its category",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

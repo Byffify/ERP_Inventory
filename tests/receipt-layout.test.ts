@@ -1,5 +1,6 @@
+import {seed} from './fixtures.mjs';
 import {it,expect} from 'vitest';
-import {seed,issueSale,defaultDocument} from '../src/domain';
+import {issueSale,defaultDocument} from '../src/domain';
 import {receiptLayout} from '../src/receipt-layout';
 it('the title cannot cover any supported long seller-name row',()=>{
  const sale=issueSale(seed(),'s1',[{productId:'a',quantity:3,price:18000}],{...defaultDocument(),sellerName:'W'.repeat(1000)}).sales[0];
