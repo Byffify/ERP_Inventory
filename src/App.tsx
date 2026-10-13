@@ -44,6 +44,7 @@ import SimpleProductForm from "./SimpleProductForm";
 import {saveSimpleProduct, deleteSimpleProduct, type SimpleProductInput} from "./simple-product";
 import SaleProducts from "./SaleProducts";
 import {addCartItem} from "./cart";
+import {readCart,writeCart} from "./cart-recovery";
 import { ModelDetail } from "./CatalogBrowser";
 import {
   resolvedImage,
@@ -153,12 +154,17 @@ function ConfirmDialog({
 
 export default function App() {
   const [initial] = useState(readInitial);
+  const [recovered]=useState(()=>{
+    try{return initial.state?readCart(sessionStorage,initial.state):{cart:null,notice:'',error:''};}
+    catch{return {cart:null,notice:'',error:'กู้คืนตะกร้าชั่วคราวไม่สำเร็จ กรุณาเลือกสินค้าใหม่'};}
+  });
   const [state, setState] = useState<DemoState | null>(initial.state);
-  const [error, setError] = useState(initial.error);
-  const [notice, setNotice] = useState("");
-  const [view, setView] = useState<View>("products");
+  const [error, setError] = useState(initial.error||recovered.error);
+  const [notice, setNotice] = useState(recovered.notice);
+  const [cartStorageError,setCartStorageError]=useState('');
+  const [view, setView] = useState<View>(recovered.cart?"picker":"products");
   const [modelId, setModelId] = useState("");
-  const [editor, setEditor] = useState<Editor>(() => ({
+  const [editor, setEditor] = useState<Editor>(() => recovered.cart??({
     id: uid(),
     lines: [],
     document: defaultDocument(initial.state?.shop),
@@ -192,6 +198,14 @@ export default function App() {
   const [pendingView, setPendingView] = useState<View | null>(null);
   const [historySearch, setHistorySearch] = useState("");
   const [historyStatus, setHistoryStatus] = useState("");
+  useEffect(()=>{
+    if(!state)return;
+    // Historical invoice edits never replace the independent new-sale cart.
+    const cart=editingSaleId?savedCart.current:editor;
+    if(!cart)return;
+    try{writeCart(sessionStorage,cart);setCartStorageError('');}
+    catch(e){setCartStorageError(message(e));}
+  },[editor,editingSaleId,state]);
   function closeMenu(){setMenuOpen(false);requestAnimationFrame(()=>menuButton.current?.focus());}
   useEffect(()=>{
     if(!menuOpen)return;
@@ -203,11 +217,11 @@ export default function App() {
     return ()=>{document.removeEventListener('keydown',keyboard);window.removeEventListener('resize',resize);};
   },[menuOpen]);
   useEffect(() => {
-    if (!catalogDirty || view !== "catalog") return;
+    if (!(catalogDirty&&view==='catalog') && !(cartStorageError&&editor.lines.length) && !(editingSaleId&&JSON.stringify(editor)!==editBaseline.current)) return;
     const warn = (e: BeforeUnloadEvent) => { e.preventDefault(); e.returnValue = ""; };
     window.addEventListener("beforeunload", warn);
     return () => window.removeEventListener("beforeunload", warn);
-  }, [catalogDirty, view]);
+  }, [catalogDirty, view,cartStorageError,editor,editingSaleId]);
   const headingRef = useRef<HTMLHeadingElement>(null);
   const previousView = useRef(view);
   useEffect(() => {
@@ -573,7 +587,7 @@ export default function App() {
           </h1>
         </div>
         {error && (
-          <div className="message error" role="alert">
+          <div id="app-error" className="message error" role="alert" tabIndex={-1}>
             <AlertCircle size={22} aria-hidden="true" />
             <div>
               {error}
@@ -585,6 +599,7 @@ export default function App() {
             </div>
           </div>
         )}
+        {cartStorageError&&<div className="message error" role="alert"><AlertCircle size={22} aria-hidden="true"/><span>{cartStorageError}</span></div>}
         {notice && (
           <div className="message" role="status">
             <Check size={22} aria-hidden="true" />

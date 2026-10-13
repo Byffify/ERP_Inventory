@@ -1,0 +1,26 @@
+[
+  {
+    "name": "reload restores cart and bill fields without deducting stock; issue clears cache",
+    "status": "passed"
+  },
+  {
+    "name": "invoice edit reload recovers new-sale cart instead of old bill edits",
+    "status": "passed"
+  },
+  {
+    "name": "invalid product submit focuses first invalid field and inline errors fit mobile",
+    "status": "passed"
+  },
+  {
+    "name": "duplicate code error points to code and correcting it saves retained fields",
+    "status": "passed"
+  },
+  {
+    "name": "storage failure warns without mutating sale and product write error stays visible",
+    "status": "passed"
+  },
+  {
+    "name": "stock changes after reload are revalidated without silently reducing restored quantities",
+    "status": "passed"
+  }
+]

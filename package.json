@@ -15,7 +15,8 @@
     "test:critique": "node tests/critique-browser.mjs",
     "test:menus": "node tests/menu-separation-browser.mjs",
     "test:simple": "node tests/simple-flow-browser.mjs",
-    "test:empty": "node tests/empty-startup-browser.mjs"
+    "test:empty": "node tests/empty-startup-browser.mjs",
+    "test:harden": "node tests/hardening-browser.mjs"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.2.0",
