@@ -1,0 +1,60 @@
+{
+  "timestamp": "2026-10-12T20:21:22.375Z",
+  "browser": "Chrome headless via Playwright",
+  "physicalDevice": false,
+  "results": [
+    {
+      "name": "responsive inventory: 320/360/390/768/1280 and landscape",
+      "status": "passed"
+    },
+    {
+      "name": "select, issue, reload, authentic screenshot and PNG",
+      "status": "passed"
+    },
+    {
+      "name": "mobile edit, history and cancellation return latest quantity",
+      "status": "passed"
+    },
+    {
+      "name": "receipt review adds five only on confirmation",
+      "status": "passed"
+    },
+    {
+      "name": "mixed SKU shortage commits no partial sale",
+      "status": "passed"
+    },
+    {
+      "name": "invalid quantities and prices have inline recovery",
+      "status": "passed"
+    },
+    {
+      "name": "quota failure preserves stock and reports no confirmation",
+      "status": "passed"
+    },
+    {
+      "name": "PNG failure permits retry without changing stock",
+      "status": "passed"
+    },
+    {
+      "name": "corrupt data blocks transactions and reset requires confirmation",
+      "status": "passed"
+    },
+    {
+      "name": "narrow sale form, 200% text, landscape and reduced keyboard viewport",
+      "status": "passed"
+    },
+    {
+      "name": "long product names and very large stock remain readable at 320px",
+      "status": "passed"
+    },
+    {
+      "name": "editor and saved paper bill across all required breakpoints",
+      "status": "passed"
+    },
+    {
+      "name": "S4 16:9 rendered layout from authentic screenshot",
+      "status": "passed"
+    }
+  ],
+  "runtimeErrors": []
+}

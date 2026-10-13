@@ -1,0 +1,63 @@
+{
+  "timestamp": "2026-10-12T20:21:11.452Z",
+  "physicalDevice": false,
+  "results": [
+    {
+      "name": "create category/model and selected combinations only",
+      "status": "passed"
+    },
+    {
+      "name": "photos persist and removing SKU override falls back to main photo",
+      "status": "passed"
+    },
+    {
+      "name": "unsupported and damaged images are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "single-page sale, paper PNG and printable PDF have no draft or extra stock effects",
+      "status": "passed"
+    },
+    {
+      "name": "catalog forms responsive at all required breakpoints",
+      "status": "passed"
+    },
+    {
+      "name": "removing SKU during upload balances busy counter and deletes staged blob",
+      "status": "passed"
+    },
+    {
+      "name": "long optional bill fields are fully drawn inside PNG bounds",
+      "status": "passed"
+    },
+    {
+      "name": "cancelled catalog form cleans staged photos without creating a model",
+      "status": "passed"
+    },
+    {
+      "name": "retiring used SKU preserves old bills and locks its identity",
+      "status": "passed"
+    },
+    {
+      "name": "legacy saved draft migrates and completes through the one-page sale",
+      "status": "passed"
+    },
+    {
+      "name": "photo write failures leave metadata and previous photo intact",
+      "status": "passed"
+    },
+    {
+      "name": "stock cards reduce without a bill, undo, then invoicing deducts exactly once",
+      "status": "passed"
+    },
+    {
+      "name": "manual stock shortcut rejects a shortage without changing stock or creating bills",
+      "status": "passed"
+    },
+    {
+      "name": "failed reduction and failed undo retain the prior undo action for retry",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

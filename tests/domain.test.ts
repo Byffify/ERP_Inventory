@@ -1,0 +1,36 @@
+import {describe,it,expect} from 'vitest';
+import {seed,stock,saveDraft,confirmSale,reviseSale,cancelSale,receiveStock,parsePrice,loadState,commit} from '../src/domain';
+const line=(productId='a',quantity=3,price=18000)=>({productId,quantity,price});
+const draft=(s=seed(),lines=[line()])=>saveDraft(s,'sale-1',lines,'2026-10-13T01:00:00+07:00');
+const sold=()=>confirmSale(draft(),'sale-1');
+describe('stock and bills: independent literal expectations',()=>{
+it('opening quantity is 12 packs',()=>expect(stock(seed(),'a')).toBe(12));
+it('receipt adds five packs once',()=>{let s=receiveStock(seed(),'receipt-1','a',5);expect(stock(s,'a')).toBe(17);s=receiveStock(s,'receipt-1','a',5);expect(stock(s,'a')).toBe(17)});
+it('draft never reserves stock',()=>{const s=draft();expect(stock(s,'a')).toBe(12);expect(s.sales[0].status).toBe('draft')});
+it('sale reduces stock and totals 540 baht',()=>{const s=sold();expect(stock(s,'a')).toBe(9);expect(s.sales[0].total).toBe(54000)});
+it('repeat confirmation after serialization does not deduct twice',()=>{const s=JSON.parse(JSON.stringify(sold()));expect(stock(confirmSale(s,'sale-1'),'a')).toBe(9)});
+it('revision from three to four deducts only one',()=>{const s=reviseSale(sold(),'sale-1',1,[line('a',4)]);expect(stock(s,'a')).toBe(8);expect(s.sales[0].total).toBe(72000);expect(s.sales[0].revision).toBe(2);expect(s.history[0].lines[0].quantity).toBe(3)});
+it('revision from three to two returns one',()=>{const s=reviseSale(sold(),'sale-1',1,[line('a',2)]);expect(stock(s,'a')).toBe(10);expect(s.sales[0].total).toBe(36000)});
+it('replacing SKU returns packs and deducts pieces independently',()=>{const s=reviseSale(sold(),'sale-1',1,[line('b',2,6000)]);expect(stock(s,'a')).toBe(12);expect(stock(s,'b')).toBe(18)});
+it('cancel latest revision returns four once',()=>{let s=reviseSale(sold(),'sale-1',1,[line('a',4)]);s=cancelSale(s,'sale-1');expect(stock(s,'a')).toBe(12);expect(stock(cancelSale(s,'sale-1'),'a')).toBe(12);expect(s.sales[0].status).toBe('cancelled')});
+it('rejects the entire bill when one SKU is insufficient',()=>{const s=draft(seed(),[line(),line('c',1,20000)]);const before=JSON.stringify(s);expect(()=>confirmSale(s,'sale-1')).toThrow(/คงเหลือ/);expect(JSON.stringify(s)).toBe(before);expect(stock(s,'a')).toBe(12)});
+it('failed revision preserves original sale and all stock',()=>{const s=sold();const before=JSON.stringify(s);expect(()=>reviseSale(s,'sale-1',1,[line('a',13),line('b',2,6000)])).toThrow();expect(JSON.stringify(s)).toBe(before)});
+it('revision retry with stale expected revision is rejected',()=>{const s=reviseSale(sold(),'sale-1',1,[line('a',4)]);expect(()=>reviseSale(s,'sale-1',1,[line('a',5)])).toThrow(/เปลี่ยน/);expect(stock(s,'a')).toBe(8)});
+it('cannot modify confirmed bill through draft or cancelled bill through revision',()=>{expect(()=>saveDraft(sold(),'sale-1',[line()])).toThrow();expect(()=>reviseSale(cancelSale(sold(),'sale-1'),'sale-1',1,[line()])).toThrow()});
+it.each([0,-1,1.5,NaN,Infinity])('rejects quantity %s',q=>expect(()=>draft(seed(),[line('a',q)])).toThrow());
+it('merges duplicate SKU at identical price',()=>{const s=draft(seed(),[line('a',1),line('a',2)]);expect(s.sales[0].lines).toHaveLength(1);expect(s.sales[0].lines[0].quantity).toBe(3)});
+it('rejects conflicting prices for a duplicate SKU',()=>expect(()=>draft(seed(),[line(),line('a',1,5000)])).toThrow());
+it('integer satang totals include decimal price and mixed units',()=>{const s=draft(seed(),[line('a',3,18025),line('b',2,6050)]);expect(s.sales[0].total).toBe(66175)});
+it.each([['180.25',18025],['0',0],['60.5',6050]])('parses price %s exactly', (p,v)=>expect(parsePrice(p)).toBe(v));
+it.each(['-1','1.001','','abc','1e2'])('rejects malformed price %s',p=>expect(()=>parsePrice(p)).toThrow());
+});
+describe('storage boundary',()=>{
+const storage=()=>{const values=new Map<string,string>();return {getItem:(k:string)=>values.get(k)??null,setItem:(k:string,v:string)=>{values.set(k,v)}}};
+it('initializes only absent storage and reloads confirmed bill',()=>{const st=storage();const initial=loadState(st);commit(st,initial,sold());const loaded=loadState(st);expect(stock(loaded,'a')).toBe(9);expect(loaded.sales[0].status).toBe('confirmed')});
+it('failed storage write leaves original saved state intact',()=>{const st=storage();const initial=loadState(st);const broken={getItem:st.getItem,setItem:()=>{throw new Error('quota')}};expect(()=>commit(broken,initial,sold())).toThrow(/บันทึก/);expect(stock(loadState(st),'a')).toBe(12)});
+it('corrupt storage never silently resets',()=>{const st={getItem:()=>'{broken',setItem:()=>{throw new Error('should not write')}};expect(()=>loadState(st)).toThrow(/เสียหาย/)});
+it('well-formed but invalid snapshot is rejected',()=>{const st=storage();const s=seed();s.movements[0].quantity=-99;st.setItem('s4-demo-v1',JSON.stringify(s));expect(()=>loadState(st)).toThrow(/เสียหาย/)});
+it('rejects impossible negative receipts in saved data',()=>{const st=storage();const s=seed();s.movements.push({id:'bad',reference:'r',productId:'a',quantity:-1,type:'receipt',createdAt:'2026-10-13T00:00:00+07:00'});st.setItem('s4-demo-v1',JSON.stringify(s));expect(()=>loadState(st)).toThrow(/เสียหาย/)});
+it('rejects orphan sale movements instead of silently losing a bill',()=>{const st=storage();const s=sold();s.sales=[];st.setItem('s4-demo-v1',JSON.stringify(s));expect(()=>loadState(st)).toThrow(/เสียหาย/)});
+it('stale tab snapshot cannot overwrite another transaction',()=>{const st=storage();const initial=loadState(st);commit(st,initial,sold());expect(()=>commit(st,initial,receiveStock(initial,'r2','b',1))).toThrow(/แท็บ/);expect(stock(loadState(st),'a')).toBe(9)});
+});

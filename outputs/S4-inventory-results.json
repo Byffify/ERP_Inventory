@@ -1,0 +1,23 @@
+{
+  "timestamp": "2026-10-12T20:25:17.536Z",
+  "physicalDevice": false,
+  "results": [
+    {
+      "name": "type filter and per-SKU availability are independent",
+      "status": "passed"
+    },
+    {
+      "name": "compact deduction opens focused quantity and state follows deduction/undo/receipt",
+      "status": "passed"
+    },
+    {
+      "name": "reference composition stays readable at all breakpoints and keyboard states",
+      "status": "passed"
+    },
+    {
+      "name": "long names and 200% text retain quantity, unit and status",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}
