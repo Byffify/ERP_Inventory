@@ -1,0 +1,33 @@
+{
+  "results": [
+    {
+      "name": "categories can be created inline without leaving a dirty product and duplicate names are rejected",
+      "status": "passed"
+    },
+    {
+      "name": "manual code is required unique and can be edited without changing historical invoice identity",
+      "status": "passed"
+    },
+    {
+      "name": "deleting stocked goods removes all live actions but preserves invoice cancellation",
+      "status": "passed"
+    },
+    {
+      "name": "stock in is green stock out is red and phone desktop surfaces remain accessible",
+      "status": "passed"
+    },
+    {
+      "name": "new cart survives invoice revision and new-sale navigation cannot revise a historic invoice",
+      "status": "passed"
+    },
+    {
+      "name": "confirming invoice edits restores the saved new cart through the bill new-sale action",
+      "status": "passed"
+    },
+    {
+      "name": "deleting every product gives useful empty routes and deleted identities can be added under a new manual code",
+      "status": "passed"
+    }
+  ],
+  "errors": []
+}

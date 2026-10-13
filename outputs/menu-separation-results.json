@@ -17,7 +17,7 @@
       "status": "passed"
     },
     {
-      "name": "referenced products offer deactivation while retaining stock history",
+      "name": "referenced products are removed from live lists while retaining stock history",
       "status": "passed"
     },
     {

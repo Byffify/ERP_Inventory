@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-10-13T12:24:14.421Z",
+  "generatedAt": "2026-10-13T12:58:01.273Z",
   "title": "Design System: ERP Inventory",
   "extensions": {
     "colorMeta": {
@@ -129,6 +129,22 @@
           "oklch(80% 0.12 260)",
           "oklch(95% 0.12 260)"
         ]
+      },
+      "stock-in": {
+        "role": "secondary",
+        "displayName": "Receipt Green"
+      },
+      "stock-in-hover": {
+        "role": "secondary",
+        "displayName": "Receipt Hover Green"
+      },
+      "stock-out": {
+        "role": "secondary",
+        "displayName": "Stock-out Red"
+      },
+      "stock-out-hover": {
+        "role": "secondary",
+        "displayName": "Stock-out Hover Red"
       }
     },
     "typographyMeta": {
@@ -247,6 +263,30 @@
       "description": "The cart count and total lead to a separate summary screen on desktop and phone.",
       "html": "<div class=\"ds-cart\"><div role=\"status\"><strong>ตะกร้า 0 รายการ</strong><span>0.00 บาท</span></div><button disabled>ดูสรุป</button></div>",
       "css": ".ds-cart{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 32px;border-top:1px solid var(--hairline,#c7c7c7);background:var(--canvas,#fff);color:var(--ink,#191919);font:16px/24px Helvetica,Arial,\"Noto Sans Thai\",sans-serif}.ds-cart>div{display:flex;align-items:center;gap:24px}.ds-cart button{min-height:44px;padding:8px 20px;border:1px solid var(--primary,#0968f6);border-radius:44px;background:var(--primary,#0968f6);color:var(--canvas,#fff);font:600 14px/20px Helvetica,Arial,\"Noto Sans Thai\",sans-serif;cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-cart button:hover:not(:disabled){background:var(--primary-dark,#003aa5);border-color:var(--primary-dark,#003aa5)}.ds-cart button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-cart button:disabled{opacity:.5}@media(max-width:767px){.ds-cart{padding:12px 16px}.ds-cart>div{flex-direction:column;align-items:start;gap:2px}}"
+    },
+    {
+      "name": "Stock Receipt Button",
+      "kind": "button",
+      "refersTo": "button-stock-in",
+      "description": "Semantic stock direction action; quantity effects are explained before saving.",
+      "html": "<button class=\"ds-button ds-primary\">รับเข้า</button>",
+      "css": ".ds-button{font-family:Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-height:44px;padding:8px 20px;border:1px solid var(--ink,#191919);border-radius:44px;font-size:14px;font-weight:600;line-height:20px;background:var(--canvas,#fff);color:var(--ink,#191919);cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-button:hover:not(:disabled){background:var(--secondary,#f7f7f7)}.ds-button:disabled{opacity:.5}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-primary{background:#067d62;border-color:#067d62;color:var(--canvas,#fff)}.ds-primary:hover:not(:disabled){background:#045b48;border-color:#045b48}"
+    },
+    {
+      "name": "Stock-out Button",
+      "kind": "button",
+      "refersTo": "button-stock-out",
+      "description": "Semantic stock direction action; quantity effects are explained before saving.",
+      "html": "<button class=\"ds-button ds-primary\">จ่ายออก</button>",
+      "css": ".ds-button{font-family:Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-height:44px;padding:8px 20px;border:1px solid var(--ink,#191919);border-radius:44px;font-size:14px;font-weight:600;line-height:20px;background:var(--canvas,#fff);color:var(--ink,#191919);cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-button:hover:not(:disabled){background:var(--secondary,#f7f7f7)}.ds-button:disabled{opacity:.5}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-primary{background:#c4003a;border-color:#c4003a;color:var(--canvas,#fff)}.ds-primary:hover:not(:disabled){background:#92002b;border-color:#92002b}"
+    },
+    {
+      "name": "Inline Category Creation",
+      "kind": "custom",
+      "refersTo": "field",
+      "description": "Inventory and the one-page form create a category without replacing the page or clearing entered product information.",
+      "html": "<div class=\"ds-category\"><label class=\"ds-label\">ชื่อประเภทใหม่<input class=\"ds-field\" maxlength=\"120\"></label><div class=\"ds-category-actions\"><button class=\"ds-button\">ยกเลิกเพิ่มประเภท</button><button class=\"ds-button ds-primary\">บันทึกประเภท</button></div></div>",
+      "css": ".ds-label{display:flex;flex-direction:column;gap:8px;font:14px/20px Helvetica, Arial, 'Noto Sans Thai', sans-serif;color:var(--ink,#191919)}.ds-field{min-height:44px;padding:10px 16px;border:1px solid var(--hairline,#c7c7c7);border-radius:44px;background:var(--canvas,#fff);color:var(--ink,#191919);font:16px/24px Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-width:0}.ds-field::placeholder{color:var(--muted,#555)}.ds-field[aria-invalid=true]{border:2px solid var(--ink,#191919)}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-button{font-family:Helvetica, Arial, 'Noto Sans Thai', sans-serif;min-height:44px;padding:8px 20px;border:1px solid var(--ink,#191919);border-radius:44px;font-size:14px;font-weight:600;line-height:20px;background:var(--canvas,#fff);color:var(--ink,#191919);cursor:pointer;transition:background-color 150ms ease-out,border-color 150ms ease-out}.ds-button:hover:not(:disabled){background:var(--secondary,#f7f7f7)}.ds-button:disabled{opacity:.5}.ds-button:focus-visible,.ds-field:focus-visible,.ds-nav button:focus-visible{outline:2px solid var(--primary,#0968f6);outline-offset:3px}.ds-primary{background:var(--primary,#0968f6);border-color:var(--primary,#0968f6);color:var(--canvas,#fff)}.ds-primary:hover:not(:disabled){background:var(--primary-dark,#003aa5);border-color:var(--primary-dark,#003aa5)}.ds-category{display:flex;flex-direction:column;gap:12px}.ds-category-actions{display:flex;flex-wrap:wrap;gap:8px}"
     }
   ],
   "narrative": {
@@ -261,7 +301,7 @@
     "rules": [
       {
         "name": "The Action Rule",
-        "body": "Cobalt marks actionable emphasis; product data and quantities stay readable in graphite.",
+        "body": "Cobalt marks general actions; green identifies receipt and red identifies stock-out. Ordinary product data stays readable in graphite.",
         "section": "colors"
       },
       {

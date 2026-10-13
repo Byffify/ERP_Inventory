@@ -11,6 +11,10 @@ colors:
   hairline: "#c7c7c7"
   primary: "#0968f6"
   primary-dark: "#003aa5"
+  stock-in: "#067d62"
+  stock-in-hover: "#045b48"
+  stock-out: "#c4003a"
+  stock-out-hover: "#92002b"
 typography:
   headline:
     fontFamily: "Arial, Helvetica, 'Noto Sans Thai', sans-serif"
@@ -70,6 +74,24 @@ components:
     typography: "{typography.button}"
     rounded: "{rounded.pill}"
     padding: "8px 20px"
+  button-stock-in:
+    backgroundColor: "{colors.stock-in}"
+    textColor: "{colors.canvas}"
+    typography: "{typography.button}"
+    rounded: "{rounded.pill}"
+    padding: "8px 20px"
+  button-stock-in-hover:
+    backgroundColor: "{colors.stock-in-hover}"
+    textColor: "{colors.canvas}"
+  button-stock-out:
+    backgroundColor: "{colors.stock-out}"
+    textColor: "{colors.canvas}"
+    typography: "{typography.button}"
+    rounded: "{rounded.pill}"
+    padding: "8px 20px"
+  button-stock-out-hover:
+    backgroundColor: "{colors.stock-out-hover}"
+    textColor: "{colors.canvas}"
   field:
     backgroundColor: "{colors.canvas}"
     textColor: "{colors.ink}"
@@ -111,11 +133,15 @@ This document records the current implementation in `src/ebay.css`, loaded after
 
 Cobalt identifies the main action and keyboard focus. Deep cobalt supplies primary hover and text-link treatments. Keep operational states explicit in text; color alone does not explain a quantity change.
 
+### Secondary
+
+Receipt green and stock-out red identify stock direction in operation controls and signed movement-log entries. Their darker companions supply hover states. Labels and signed quantities still explain direction; physical count keeps the cobalt action. These are approved semantic additions to the incumbent eBay palette.
+
 ### Neutral
 
 Graphite carries headings, quantities and ordinary control outlines. White is the working canvas. Secondary grey groups selected navigation and explanatory previews; hairline grey separates rows and defines fields. Muted graphite supports metadata. The inherited warm grey remains a neutral selection token.
 
-**The Action Rule.** Cobalt marks actionable emphasis; product data and quantities stay readable in graphite.
+**The Action Rule.** Cobalt marks general actions; green identifies receipt and red identifies stock-out. Ordinary product data stays readable in graphite.
 
 ## Typography
 
@@ -171,13 +197,17 @@ A fixed cart footer shows distinct line count, total and the summary action, ins
 
 ### Product Add / Edit
 
-The one-page form reuses the incumbent fields, photo control and ordinary action row. Name, optional color/size, unit, price, category and details stay together. The generated SKU code and current quantity are read-only. A duplicate name/color/size identity presents the existing SKU code and an action to open it, retaining entered work. Recorded color, size and unit become read-only with a nearby explanation. Category is an individual SKU override; changing it does not recategorize sibling SKUs.
+The one-page form reuses the incumbent fields, photo control and ordinary action row. Name, optional color/size, unit, price, category and details stay together. The SKU code is required, entered manually and editable; current quantity remains read-only. Codes are checked for uniqueness against live and retained historical product records. A duplicate name/color/size identity presents the existing SKU code and an action to open it, retaining entered work. Recorded color, size and unit become read-only with a nearby explanation. Category is an individual SKU override; changing it does not recategorize sibling SKUs. Inline category creation is available in Inventory and the product form; a category created within the form becomes selected without clearing entered fields.
 
-Inventory edit/delete actions target the individual SKU. Deletion requires confirmation; stocked or referenced SKUs offer explicit deactivation while retaining history. New entries start at zero and quantities change through Stock management. Upload-busy controls and unsaved-work protection preserve the form during navigation.
+Inventory edit/delete actions target the individual SKU. Deletion requires confirmation and immediately removes the SKU from all working lists and live actions. Stocked or referenced SKUs retain inaccessible internal references for old bills and movements; there is no deactivation alternative or reactivation of deleted products. The include-inactive checkbox is absent. New entries start at zero and quantities change through Stock management. Upload-busy controls and unsaved-work protection preserve the form during navigation.
 
 ### Stock Operations
 
-Stock-operation previews explain receipt, outflow or count consequences before saving. Standalone outflow remains in Stock management; the ordinary sale list does not offer a handwritten-sale mode.
+Receipt controls use stock-in green with the corresponding darker hover; stock-out controls use stock-out red with its darker hover. Labels, icons and preview quantities explain the operation alongside color. Signed positive and negative log headings use the same semantic colors. Stock-operation previews explain receipt, outflow or count consequences before saving. Standalone outflow remains in Stock management; the ordinary sale list does not offer a handwritten-sale mode.
+
+### Bill Editing Context
+
+Historical bill edits and new sales use isolated contexts. Editing labels identify the current bill and provide an explicit cancel-edit action from its product list and summary. Leaving changed revisions asks for an explicit discard decision. Confirming or discarding a revision restores the original new-sale cart; the original bill remains authoritative until revision confirmation. FLOW.md records the operating journey.
 
 ### Paper Bills
 

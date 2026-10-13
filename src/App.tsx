@@ -41,12 +41,13 @@ import {
 } from "./domain";
 import { exportBillImage } from "./bill-image";
 import SimpleProductForm from "./SimpleProductForm";
-import {saveSimpleProduct, canDeleteSimpleProduct, deleteSimpleProduct, archiveSimpleProduct, type SimpleProductInput} from "./simple-product";
+import {saveSimpleProduct, deleteSimpleProduct, type SimpleProductInput} from "./simple-product";
 import SaleProducts from "./SaleProducts";
 import {addCartItem} from "./cart";
 import { ModelDetail } from "./CatalogBrowser";
 import {
   resolvedImage,
+  addCategory,
 } from "./catalog";
 import { ProductPhoto } from "./ProductPhoto";
 import { clearImages, removeImage } from "./images";
@@ -163,6 +164,10 @@ export default function App() {
     document: defaultDocument(initial.state?.shop),
   }));
   const [attempted, setAttempted] = useState(false);
+  const savedCart=useRef<Editor|null>(null),editBaseline=useRef('');
+  const [editingSaleId,setEditingSaleId]=useState<string|null>(null);
+  const [pendingSale,setPendingSale]=useState<Sale|null>(null);
+  const [pendingEditExit,setPendingEditExit]=useState<'picker'|'bill'|null>(null);
   const [selected, setSelected] = useState("");
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
@@ -332,17 +337,19 @@ export default function App() {
               ? "แก้บิลและปรับยอดตามผลต่างแล้ว"
               : "ออกบิลและตัดสต๊อกแล้ว",
           );
-          setEditor({
+          setEditor(savedCart.current??{
             id: uid(),
             lines: [],
             document: defaultDocument(next.shop),
           });
+          savedCart.current=null;setEditingSaleId(null);
         },
       );
     } catch (e) {
       setError(message(e));
     }
   }
+  function createCategory(name:string){const id=uid();return transact(s=>addCategory(s,id,name))?id:null;}
   function createModel(){setModelId('');go("catalog");}
   function openModel(id:string){editModel(id);}
   function editModel(id:string){
@@ -351,12 +358,12 @@ export default function App() {
   }
   function removeCatalogModel(){
     if(!state||!deleteModelId)return;
-    const id=deleteModelId,deleting=canDeleteSimpleProduct(state,id);
+    const id=deleteModelId;
     const oldImages=[...state.models.map(m=>m.imageId),...state.products.map(p=>p.imageId)];
-    if(transact(s=>deleting?deleteSimpleProduct(s,id):archiveSimpleProduct(s,id),next=>{
+    if(transact(s=>deleteSimpleProduct(s,id),next=>{
       const used=new Set([...next.models.map(m=>m.imageId),...next.products.map(p=>p.imageId)]);
       for(const image of oldImages)if(image&&!used.has(image))void removeImage(image).catch(()=>{});
-      setView("products");setNotice(deleting?"ลบสินค้าแล้ว":"ปิดใช้งานสินค้าแล้ว · เก็บยอดและประวัติไว้");
+      setView("products");setNotice("ลบสินค้าออกจากรายการแล้ว");if(savedCart.current)savedCart.current={...savedCart.current,lines:savedCart.current.lines.filter(l=>l.productId!==id)};setEditor(current=>current.revision?current:{...current,lines:current.lines.filter(l=>l.productId!==id)});
     }))setDeleteModelId(null);
   }
   function saveCatalog(input:SimpleProductInput){
@@ -385,8 +392,12 @@ export default function App() {
       }
   }
   function editSale(s: Sale) {
-
-    setEditor({
+    if(editingSaleId&&JSON.stringify(editor)!==editBaseline.current){setPendingSale(s);return;}
+    beginSaleEdit(s);
+  }
+  function beginSaleEdit(s:Sale){
+    if(!editingSaleId)savedCart.current=structuredClone(editor);
+    const next:Editor={
       id: s.id,
       revision: s.status === "confirmed" ? s.revision : undefined,
       lines: s.lines.map((l) => ({
@@ -395,9 +406,20 @@ export default function App() {
         price: (l.price / 100).toFixed(2),
       })),
       document: s.document ?? defaultDocument(state?.shop),
-    });
+    };
+    editBaseline.current=JSON.stringify(next);setEditingSaleId(s.id);setEditor(next);
     go("editor");
   }
+  function restoreCart(target:'picker'|'bill'){
+    if(target==='bill'&&editingSaleId)setSelected(editingSaleId);
+    setEditor(savedCart.current??{id:uid(),lines:[],document:defaultDocument(state?.shop)});
+    savedCart.current=null;setEditingSaleId(null);go(target);
+  }
+  function leaveSaleEdit(target:'picker'|'bill'){
+    if(JSON.stringify(editor)!==editBaseline.current){setPendingEditExit(target);setMenuOpen(false);return;}
+    restoreCart(target);
+  }
+  function startNewSale(){if(editingSaleId)leaveSaleEdit('picker');else go('picker');}
   function openReceipt(p: Product) {
     setReceipt({ id: uid(), productId: p.id, quantity: "", review: false });
     go("receive");
@@ -451,7 +473,7 @@ export default function App() {
   const titles: Record<View, string> = {
     products: "ข้อมูลสินค้า",
     stocks: "จัดการสต๊อก",
-    picker: "ทำบิลขาย",
+    picker: editingSaleId?`เพิ่มสินค้าในบิล ${state?.sales.find(s=>s.id===editingSaleId)?.code??''}`:"ทำบิลขาย",
     model:
       state?.models.find((m) => m.id === modelId)?.name ?? "ตัวเลือกสินค้า",
     catalog: state?.products.some((p) => p.id === modelId)
@@ -489,7 +511,7 @@ export default function App() {
         <button
           key={id}
           aria-label={label}
-          onClick={() => go(id==="editor"?"picker":id)}
+          onClick={() => id==="editor"?startNewSale():go(id)}
           aria-current={active === id ? "page" : undefined}
         >
           <Icon size={22} aria-hidden="true" />
@@ -581,10 +603,10 @@ export default function App() {
         ) : (
           <>
             {view === "products" && (
-              <InventoryAdmin state={state} onEdit={editModel} onDelete={setDeleteModelId} onCreate={createModel} onOpen={openModel}/>
+              <InventoryAdmin state={state} onEdit={editModel} onDelete={setDeleteModelId} onCreate={createModel} onOpen={openModel} onAddCategory={createCategory}/>
             )}
-            {view === "stocks"&&<StockManagement state={state} onOperation={openStockOperation}/>}
-            {view === "picker" && <SaleProducts state={state} lines={editor.lines} total={previewTotal} available={saleAvailable} onAdd={addToCart} onSummary={()=>go("editor")} onInventory={()=>go("products")}/>}
+            {view === "stocks"&&<StockManagement state={state} onOperation={openStockOperation} onInventory={()=>go("products")}/> }
+            {view === "picker" && <>{editingSaleId&&<button onClick={()=>leaveSaleEdit("bill")}>ยกเลิกการแก้บิล</button>}<SaleProducts state={state} lines={editor.lines} total={previewTotal} available={saleAvailable} onAdd={addToCart} onSummary={()=>go("editor")} onInventory={()=>go("products")}/></>}
             {view === "model" && (
               <ModelDetail
                 state={state}
@@ -592,7 +614,7 @@ export default function App() {
                 onEdit={() => go("catalog")}
               />
             )}
-            {view === "catalog" && <SimpleProductForm key={modelId||'new'} state={state} productId={modelId||undefined} onSave={saveCatalog} onDirtyChange={setCatalogDirty} onCancel={()=>go("products")} onExisting={editModel}/>}
+            {view === "catalog" && <SimpleProductForm key={modelId||'new'} state={state} productId={modelId||undefined} onSave={saveCatalog} onDirtyChange={setCatalogDirty} onCancel={()=>go("products")} onExisting={editModel} onAddCategory={createCategory}/>}
             {view === "operation"&&<StockOperation key={`${stockMode}-${operationProductId}`} state={state} mode={stockMode} initialProductId={operationProductId} onSave={saveStockOperation} onCancel={()=>go("stocks")}/>}
             {view === "editor" && (
               <>
@@ -603,7 +625,7 @@ export default function App() {
                     ? "เลือกสินค้าที่ขายตามบิลมือแล้ว ระบบจะลดสต๊อกโดยไม่ออกบิลใหม่"
                     : "เลือกสินค้าและจำนวน ตรวจยอดในหน้านี้ แล้วกดยืนยันและออกบิล"}
                 </p>
-                <button className="primary" onClick={()=>go("picker")}>เลือกสินค้าเพิ่ม</button>
+                <div className="actions"><button onClick={()=>go("picker")}>เลือกสินค้าเพิ่ม</button>{editingSaleId&&<button onClick={()=>leaveSaleEdit("bill")}>ยกเลิกการแก้บิล</button>}</div>
                 <div className="workspace sale-summary-workspace">
 
                   <section aria-label="รายการสินค้าในบิล">
@@ -996,15 +1018,7 @@ export default function App() {
                     )}
                     <button
                       className="full-width"
-                      onClick={() => {
-                        setEditor({
-                          id: uid(),
-                          lines: [],
-                          document: defaultDocument(state?.shop),
-                        });
-
-                        go("picker");
-                      }}
+                      onClick={startNewSale}
                     >
                       ทำบิลใหม่
                       <Plus size={20} aria-hidden="true" />
@@ -1041,7 +1055,9 @@ export default function App() {
         )}
       </main>
       </div></div>
-      {state&&deleteModelId&&<ConfirmDialog title={canDeleteSimpleProduct(state,deleteModelId)?"ลบสินค้านี้?":"สินค้านี้มียอดหรือประวัติ"} confirmLabel={canDeleteSimpleProduct(state,deleteModelId)?"ลบสินค้า":"ปิดใช้งานสินค้า"} onClose={()=>setDeleteModelId(null)} onConfirm={removeCatalogModel}><p>{productName(state.products.find(p=>p.id===deleteModelId)!)} · {state.products.find(p=>p.id===deleteModelId)?.code}</p><p>{canDeleteSimpleProduct(state,deleteModelId)?"ลบเฉพาะสินค้ารหัสนี้ ซึ่งยังไม่มีประวัติและยอดเป็นศูนย์":"ปิดใช้งานเพื่อไม่ให้เลือกขายใหม่ โดยเก็บยอดและประวัติไว้ เปิดใช้งานกลับจากหน้าแก้ข้อมูลได้"}</p></ConfirmDialog>}
+      {state&&deleteModelId&&<ConfirmDialog title="ลบสินค้านี้?" confirmLabel="ลบสินค้า" onClose={()=>setDeleteModelId(null)} onConfirm={removeCatalogModel}><p>{productName(state.products.find(p=>p.id===deleteModelId)!)} · {state.products.find(p=>p.id===deleteModelId)?.code}</p><p>สินค้าจะถูกนำออกจาก Inventory หน้าสต๊อก และรายการที่เลือกขาย บิลและประวัติเดิมยังเปิดดูได้</p><p>คงเหลือ {stock(state,deleteModelId)} {state.products.find(p=>p.id===deleteModelId)?.unit}</p></ConfirmDialog>}
+      {pendingEditExit&&<ConfirmDialog title="ออกจากการแก้บิลที่ยังไม่ได้บันทึก?" closeLabel="อยู่ต่อ" confirmLabel="ออกโดยไม่บันทึก" onClose={()=>setPendingEditExit(null)} onConfirm={()=>{restoreCart(pendingEditExit);setPendingEditExit(null);}}><p>บิลเดิมจะคงเดิม และตะกร้าขายใหม่ที่เลือกไว้จะยังอยู่</p></ConfirmDialog>}
+      {pendingSale&&<ConfirmDialog title="เปลี่ยนบิลที่กำลังแก้?" closeLabel="อยู่ต่อ" confirmLabel="ออกโดยไม่บันทึก" onClose={()=>setPendingSale(null)} onConfirm={()=>{beginSaleEdit(pendingSale);setPendingSale(null);}}><p>การแก้บิลที่ยังไม่ได้บันทึกจะไม่ถูกเก็บ</p></ConfirmDialog>}
       {pendingProduct&&<ConfirmDialog title="ออกจากหน้าที่ยังไม่ได้บันทึก?" closeLabel="อยู่ต่อ" confirmLabel="ออกโดยไม่บันทึก" onClose={()=>setPendingProduct(null)} onConfirm={()=>{setModelId(pendingProduct);setCatalogDirty(false);setPendingProduct(null);}}><p>ข้อมูลและรูปที่แก้ไว้จะไม่ถูกบันทึก</p></ConfirmDialog>}
       {pendingView && <ConfirmDialog title="ออกจากหน้าที่ยังไม่ได้บันทึก?" closeLabel="อยู่ต่อ" confirmLabel="ออกโดยไม่บันทึก" onClose={() => setPendingView(null)} onConfirm={() => {navigate(pendingView);setPendingView(null);}}><p>ข้อมูลสินค้า ตัวเลือก และรูปที่แก้ไว้จะไม่ถูกบันทึก</p><p>เลือกอยู่ต่อเพื่อกลับไปตรวจและบันทึกข้อมูล</p></ConfirmDialog>}
       {confirm === "reset" && (

@@ -1,4 +1,13 @@
 @media screen {
+ .category-adder {display:flex;flex-direction:column;gap:12px;}
+ .category-adder>button {align-self:start;}
+ .catalog-admin-filters .category-adder {grid-column:1/-1;}
+ .stock-control-actions button.stock-in,.stock-operation button.stock-in {background:#067d62;border-color:#067d62;color:#fff;}
+ .stock-control-actions button.stock-in:hover:not(:disabled),.stock-operation button.stock-in:hover:not(:disabled) {background:#045b48;border-color:#045b48;color:#fff;}
+ .stock-control-actions button.stock-out,.stock-operation button.stock-out {background:#c4003a;border-color:#c4003a;color:#fff;}
+ .stock-control-actions button.stock-out:hover:not(:disabled),.stock-operation button.stock-out:hover:not(:disabled) {background:#92002b;border-color:#92002b;color:#fff;}
+ .stock-log[data-direction="in"]>strong {color:#067d62;}
+ .stock-log[data-direction="out"]>strong {color:#c4003a;}
  .sale-products {padding-bottom:110px;}
  .simple-product-form .catalog-form-actions {position:static;}
  .sale-product-info {overflow-wrap:anywhere;}

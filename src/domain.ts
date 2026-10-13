@@ -1,6 +1,6 @@
 export interface Category { id:string; name:string }
 export interface ProductModel { id:string; name:string; description:string; categoryId:string; imageId?:string }
-export interface Product { id:string; modelId:string; active:boolean; imageId?:string; description?:string; categoryId?:string; code:string; name:string; color?:string; size?:string; unit:string; price:number }
+export interface Product { id:string; modelId:string; active:boolean; deleted?:boolean; imageId?:string; description?:string; categoryId?:string; code:string; name:string; color?:string; size?:string; unit:string; price:number }
 export interface SaleLine { productId:string; name:string; unit:string; quantity:number; price:number }
 export interface InputLine { productId:string; quantity:number; price:number }
 export interface BillDetails {sellerName:string;sellerAddress:string;sellerTaxId:string;buyerName:string;buyerAddress:string;buyerTaxId:string;buyerRegistration?:string;bookNumber:string;receiverName:string}
@@ -124,9 +124,10 @@ function validState(value:unknown,legacy=false):value is DemoState {
   if(!Array.isArray(s.categories)||!s.categories.length||!s.categories.every(c=>c&&text(c.id)&&text(c.name))||!unique(s.categories.map(c=>c.id))||!unique(s.categories.map(c=>c.name.trim().toLocaleLowerCase('th'))))return false;
   if(!Array.isArray(s.models)||!s.models.every(m=>m&&text(m.id)&&text(m.name)&&typeof m.description==='string'&&s.categories.some(c=>c.id===m.categoryId)&&(m.imageId===undefined||text(m.imageId)))||!unique(s.models.map(m=>m.id)))return false;
   if(!s.products.every(p=>typeof p.active==='boolean'&&s.models.some(m=>m.id===p.modelId&&m.name===p.name)&&(p.imageId===undefined||text(p.imageId)))||!unique(s.products.map(p=>p.code.trim().toLocaleLowerCase('th'))))return false;
-  if(!unique(s.products.map(p=>JSON.stringify([p.modelId,(p.color??'').trim().toLocaleLowerCase('th'),(p.size??'').trim().toLocaleLowerCase('th')]))))return false;
+  if(!unique(s.products.filter(p=>!p.deleted).map(p=>JSON.stringify([p.modelId,(p.color??'').trim().toLocaleLowerCase('th'),(p.size??'').trim().toLocaleLowerCase('th')]))))return false;
  }
  if(!s.products.every(p=>(p.description===undefined||(typeof p.description==='string'&&p.description.length<=1000))&&(p.categoryId===undefined||s.categories.some(c=>c.id===p.categoryId))))return false;
+ if(!s.products.every(p=>(p.deleted===undefined||typeof p.deleted==='boolean')&&(!p.deleted||p.active===false)))return false;
  const ids=new Set(s.products.map(p=>p.id));
  if(!s.movements.every(m=>m&&text(m.id)&&ids.has(m.productId)&&safe(m.quantity)&&['opening','receipt','sale','revision','cancel','deduction','deduction-undo','count'].includes(m.type)&&text(m.reference)&&date(m.createdAt)&&(m.type!=='opening'||m.quantity>=0))||!unique(s.movements.map(m=>m.id)))return false;
  if(s.movements.some(m=>m.type==='count'&&(!safe(m.countedQuantity as number)||(m.countedQuantity as number)<0))||!unique(s.movements.filter(m=>m.type==='count').map(m=>m.reference)))return false;

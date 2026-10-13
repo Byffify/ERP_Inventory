@@ -1,22 +1,23 @@
 import {stock,type DemoState,type Product,type ProductModel} from './domain';
 import {resolvedImage,skuLocked} from './catalog';
 
-export interface SimpleProductInput {id:string;name:string;description:string;color?:string;size?:string;unit:string;price:number;imageId?:string;active:boolean;categoryId:string}
+export interface SimpleProductInput {id:string;code:string;name:string;description:string;color?:string;size?:string;unit:string;price:number;imageId?:string;active:boolean;categoryId:string}
 const clean=(value:string)=>value.trim().replace(/\s+/g,' ');
 const key=(value:string)=>clean(value).toLocaleLowerCase('th');
 const optional=(value?:string)=>value?.trim()?clean(value):undefined;
 const required=(value:string,label:string,max=120)=>{if(typeof value!=='string'||!clean(value)||clean(value).length>max)throw new Error(`กรุณาระบุ${label} ไม่เกิน ${max} ตัวอักษร`);return clean(value);};
 export function findProductIdentity(s:DemoState,name:string,color?:string,size?:string,excludeId?:string):Product|undefined {
- return s.products.find(p=>p.id!==excludeId&&key(p.name)===key(name)&&key(p.color??'')===key(color??'')&&key(p.size??'')===key(size??''));
+ return s.products.find(p=>!p.deleted&&p.id!==excludeId&&key(p.name)===key(name)&&key(p.color??'')===key(color??'')&&key(p.size??'')===key(size??''));
 }
 export function canDeleteSimpleProduct(s:DemoState,id:string):boolean {
- return s.products.some(p=>p.id===id)&&stock(s,id)===0&&!skuLocked(s,id);
+ return s.products.some(p=>p.id===id&&!p.deleted);
 }
 export function deleteSimpleProduct(s:DemoState,id:string):DemoState {
  const product=s.products.find(p=>p.id===id);
  if(!product)throw new Error('ไม่พบสินค้า');
- if(!canDeleteSimpleProduct(s,id))throw new Error(`${product.code} มียอดหรือประวัติรายการ ไม่สามารถลบถาวรได้ กรุณาปิดใช้งานแทน`);
+ if(product.deleted)return s;
  const next=structuredClone(s);
+ if(stock(s,id)!==0||skuLocked(s,id)){const retained=next.products.find(p=>p.id===id)!;retained.deleted=true;retained.active=false;return next;}
  next.products=next.products.filter(p=>p.id!==id);
  next.movements=next.movements.filter(m=>m.productId!==id);
  if(!next.products.some(p=>p.modelId===product.modelId))next.models=next.models.filter(m=>m.id!==product.modelId);
@@ -28,6 +29,8 @@ export function archiveSimpleProduct(s:DemoState,id:string):DemoState {
 }
 export function saveSimpleProduct(s:DemoState,input:SimpleProductInput):DemoState {
  const id=required(input.id,'รหัสภายในสินค้า'),name=required(input.name,'ชื่อสินค้า'),unit=required(input.unit,'หน่วยขาย',32);
+ if(typeof input.code!=='string'||!input.code.trim()||input.code.trim().length>64)throw new Error('กรุณาระบุรหัสสินค้า ไม่เกิน 64 ตัวอักษร');
+ const code=input.code.trim();
  const color=optional(input.color),size=optional(input.size),imageId=optional(input.imageId);
  if((color?.length??0)>120||(size?.length??0)>120)throw new Error('สีและไซซ์ต้องไม่เกิน 120 ตัวอักษร');
  if(typeof input.description!=='string'||input.description.length>1000)throw new Error('รายละเอียดสินค้าต้องไม่เกิน 1000 ตัวอักษร');
@@ -35,6 +38,8 @@ export function saveSimpleProduct(s:DemoState,input:SimpleProductInput):DemoStat
  if(typeof input.active!=='boolean')throw new Error('กรุณาระบุสถานะสินค้า');
  if(!s.categories.some(c=>c.id===input.categoryId))throw new Error('กรุณาเลือกประเภทสินค้า');
  const previous=s.products.find(p=>p.id===id),duplicate=findProductIdentity(s,name,color,size,id);
+ if(previous?.deleted)throw new Error('สินค้านี้ถูกลบแล้ว ไม่สามารถแก้ไขหรือเปิดใช้งานได้');
+ if(s.products.some(p=>p.id!==id&&p.code.trim().toLocaleLowerCase('th')===code.toLocaleLowerCase('th')))throw new Error('รหัสสินค้าซ้ำกับสินค้าอื่น กรุณาระบุรหัสใหม่');
  if(duplicate)throw new Error(`มีสินค้าชื่อ สี และไซซ์นี้แล้ว (${duplicate.code}) กรุณาเปิดสินค้าที่มีแล้ว`);
  const locked=!!previous&&skuLocked(s,id);
  if(previous&&locked&&(key(previous.color??'')!==key(color??'')||key(previous.size??'')!==key(size??'')||key(previous.unit)!==key(unit)))throw new Error(`${previous.code} มีรายการแล้ว ไม่สามารถเปลี่ยนสี ไซซ์ หรือหน่วยขายได้`);
@@ -46,8 +51,6 @@ export function saveSimpleProduct(s:DemoState,input:SimpleProductInput):DemoStat
   model={id:modelId,name,description:input.description.trim(),categoryId:input.categoryId,imageId:oldModel?.imageId} satisfies ProductModel;
   next.models.push(model);
  }
- let code=previous?.code;
- if(!code){let sequence=1;do{code=`SKU-${String(sequence++).padStart(6,'0')}`;}while(s.products.some(p=>key(p.code)===key(code!)));}
  // If a rename joins another kind, retain the old effective photo as this SKU's override.
  const retainedImage=imageId??(previous&&previous.modelId!==model.id&&oldModel?.imageId!==model.imageId?resolvedImage(s,{...previous,imageId:undefined}):undefined);
  const product:Product & {description:string;categoryId:string}={...previous,id,modelId:model.id,name:model.name,code,color:locked?previous!.color:color,size:locked?previous!.size:size,unit:locked?previous!.unit:unit,price:input.price,active:input.active,imageId:retainedImage,description:input.description.trim(),categoryId:input.categoryId};
